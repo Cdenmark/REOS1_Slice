@@ -1,0 +1,39 @@
+id: REOS-001
+type: recognition_transition
+
+status: RATIFIED
+
+description: >
+  Transform one governed ingress payload into one
+  Recognition Unit with deterministic basin orientation.
+
+inputs:
+  - ingress_payload
+
+outputs:
+  - recognition_result
+  - transition_telemetry
+
+constraints:
+
+  deterministic_execution: true
+
+  single_primary_basin: true
+
+  provenance_required: true
+
+  telemetry_required: true
+
+  independent_verification_required: true
+
+out_of_scope:
+
+  - rxreos
+
+  - protocol_generation
+
+  - plant_selection
+
+  - par
+
+  - outcome_reporting
