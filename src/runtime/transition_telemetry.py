@@ -3,20 +3,16 @@ from typing import List, Optional
 
 
 @dataclass(frozen=True)
-class RuleTraceEntry:
-	"""
-	One compiler-certified rule execution.
-	"""
+class OperationTraceEntry:
+	"""One ordered runtime operation executed under contract authority."""
 
 	sequence: int
-	rule_id: str
+	operation_name: str
 
 
 @dataclass(frozen=True)
 class RejectedBasin:
-	"""
-	Candidate basin eliminated during orientation.
-	"""
+	"""A candidate basin excluded during orientation."""
 
 	basin_id: str
 	rejection_reason: str
@@ -24,25 +20,23 @@ class RejectedBasin:
 
 @dataclass(frozen=True)
 class ArtifactLineage:
-	"""
-	Provenance owned by this telemetry artifact.
-	"""
+	"""Provenance owned by the telemetry artifact."""
 
 	parent_artifacts: List[str]
-
-	compiler_version: str
-
-	verifier_version: str
+	produced_by: str
+	certified_by: str
 
 
 @dataclass(frozen=True)
 class TransitionTelemetry:
 	"""
-	Immutable execution evidence.
+	Immutable explanatory record for one REOS transition.
 
-	This object explains execution.
+	This object answers only:
 
-	It NEVER changes execution.
+	    What happened during execution?
+
+	It cannot modify or reinterpret the RecognitionResult.
 	"""
 
 	trace_id: str
@@ -59,13 +53,13 @@ class TransitionTelemetry:
 
 	runtime_version: str
 
+	operation_trace: List[OperationTraceEntry]
+
 	candidate_basins: List[str]
 
 	selected_basin: str
 
 	rejected_basins: List[RejectedBasin]
-
-	rule_trace: List[RuleTraceEntry]
 
 	evaluated_seams: List[str] = field(default_factory=list)
 
