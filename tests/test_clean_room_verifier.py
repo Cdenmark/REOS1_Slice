@@ -10,6 +10,7 @@ from runtime.ingress_payload import GovernedIngressPayload
 from runtime.reos001 import REOS001Runtime
 from verifier.clean_room import (
     VerificationError,
+    create_verification_report,
     verify_reos001,
 )
 
@@ -87,6 +88,82 @@ def test_clean_room_verifier_rejects_mutated_result():
         match="recognition_id",
     ):
         verify_reos001(
+            contract=contract,
+            payload=payload,
+            result=mutated_result,
+            telemetry=telemetry,
+        )
+
+
+def test_clean_room_verifier_emits_immutable_report():
+    contract = make_contract()
+    payload = make_payload()
+
+    result, telemetry = REOS001Runtime().execute(
+        contract=contract,
+        payload=payload,
+    )
+
+    report = create_verification_report(
+        contract=contract,
+        payload=payload,
+        result=result,
+        telemetry=telemetry,
+    )
+
+    assert report.verified is True
+    assert report.transition_id == telemetry.transition_id
+    assert report.recognition_id == result.recognition_id
+    assert report.report_id.startswith("VR-")
+    assert all(check.passed for check in report.checks)
+
+
+def test_verification_report_identity_is_reproducible():
+    contract = make_contract()
+    payload = make_payload()
+
+    result, telemetry = REOS001Runtime().execute(
+        contract=contract,
+        payload=payload,
+    )
+
+    first = create_verification_report(
+        contract=contract,
+        payload=payload,
+        result=result,
+        telemetry=telemetry,
+    )
+
+    second = create_verification_report(
+        contract=contract,
+        payload=payload,
+        result=result,
+        telemetry=telemetry,
+    )
+
+    assert first == second
+    assert first.report_id == second.report_id
+
+
+def test_failed_verification_emits_no_report():
+    contract = make_contract()
+    payload = make_payload()
+
+    result, telemetry = REOS001Runtime().execute(
+        contract=contract,
+        payload=payload,
+    )
+
+    mutated_result = replace(
+        result,
+        recognition_id="RR-TAMPERED",
+    )
+
+    with pytest.raises(
+        VerificationError,
+        match="recognition_id",
+    ):
+        create_verification_report(
             contract=contract,
             payload=payload,
             result=mutated_result,

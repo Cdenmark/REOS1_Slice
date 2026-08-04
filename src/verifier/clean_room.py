@@ -3,9 +3,17 @@ import json
 from dataclasses import asdict, is_dataclass
 from typing import Any, Dict
 
+from verifier.verification_report import (
+    IndependentVerificationReport,
+    VerificationCheck,
+)
+
 
 class VerificationError(Exception):
     """Raised when emitted artifacts cannot be independently reproduced."""
+
+
+VERIFIER_VERSION = "clean-room-0.1.0"
 
 
 def _canonical_json_bytes(data: Any) -> bytes:
@@ -206,3 +214,66 @@ def verify_reos001(
         )
 
     return True
+
+
+def create_verification_report(
+    contract: Any,
+    payload: Any,
+    result: Any,
+    telemetry: Any,
+) -> IndependentVerificationReport:
+    """
+    Independently verify one REOS-001 execution and emit an immutable report.
+
+    A report is produced only after all clean-room checks pass.
+    Failed verification raises VerificationError and emits no certified report.
+    """
+    verify_reos001(
+        contract=contract,
+        payload=payload,
+        result=result,
+        telemetry=telemetry,
+    )
+
+    result_data = _to_dict(result)
+    telemetry_data = _to_dict(telemetry)
+
+    checks = (
+        VerificationCheck("transition_id", True),
+        VerificationCheck("trace_id", True),
+        VerificationCheck("declaration_hash", True),
+        VerificationCheck("operation_trace", True),
+        VerificationCheck("telemetry_basin", True),
+        VerificationCheck("lineage", True),
+        VerificationCheck("recognition_id", True),
+        VerificationCheck("recognition_unit_id", True),
+        VerificationCheck("result_basin", True),
+        VerificationCheck("resolution_state", True),
+        VerificationCheck("payload_lineage", True),
+        VerificationCheck("contract_lineage", True),
+    )
+
+    report_material = {
+        "verifier_version": VERIFIER_VERSION,
+        "transition_id": telemetry_data["transition_id"],
+        "recognition_id": result_data["recognition_id"],
+        "checks": [
+            {
+                "check_name": check.check_name,
+                "passed": check.passed,
+            }
+            for check in checks
+        ],
+    }
+
+    return IndependentVerificationReport(
+        report_id=(
+            "VR-"
+            + _canonical_hash(report_material)[:16].upper()
+        ),
+        verifier_version=VERIFIER_VERSION,
+        transition_id=telemetry_data["transition_id"],
+        recognition_id=result_data["recognition_id"],
+        verified=True,
+        checks=checks,
+    )
