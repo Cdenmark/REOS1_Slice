@@ -26,6 +26,7 @@ def make_contract(allowed_operations: list[str]) -> TransitionContract:
         allowed_operations=allowed_operations,
         permitted_exports=[],
         prohibited_exports=[],
+        operation_parameters={},
     )
 
 

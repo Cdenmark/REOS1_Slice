@@ -40,6 +40,7 @@ def make_contract(
             "remedy_selection",
             "protocol_generation",
         ],
+        operation_parameters={},
     )
 
 

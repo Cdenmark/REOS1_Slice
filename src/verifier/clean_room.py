@@ -71,6 +71,9 @@ def _contract_digest(contract: Dict[str, Any]) -> str:
             "prohibited_exports": sorted(
                 contract["prohibited_exports"]
             ),
+            "operation_parameters": contract.get(
+                "operation_parameters", {}
+            ),
         }
     )
 

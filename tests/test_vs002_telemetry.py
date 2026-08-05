@@ -55,6 +55,7 @@ def make_inputs() -> VS002TelemetryInputs:
             "remedy_selection",
             "protocol_generation",
         ],
+        operation_parameters={},
     )
 
     payload = GovernedIngressPayload(

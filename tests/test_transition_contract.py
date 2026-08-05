@@ -28,6 +28,7 @@ def make_contract(allowed_operations: list[str]) -> TransitionContract:
             "remedy_selection",
             "protocol_generation",
         ],
+        operation_parameters={},
     )
 
 
@@ -67,6 +68,7 @@ def test_transition_contract_digest_is_deterministic_when_generated_at_is_defaul
         allowed_operations=["ingress_hash"],
         permitted_exports=["recognition_result"],
         prohibited_exports=[],
+        operation_parameters={},
     )
 
     second = TransitionContract(
@@ -84,6 +86,7 @@ def test_transition_contract_digest_is_deterministic_when_generated_at_is_defaul
         allowed_operations=["ingress_hash"],
         permitted_exports=["recognition_result"],
         prohibited_exports=[],
+        operation_parameters={},
     )
 
     assert first.digest() == second.digest()
@@ -107,6 +110,111 @@ def test_transition_contract_digest_changes_when_authority_changes():
         allowed_operations=first.allowed_operations,
         permitted_exports=first.permitted_exports,
         prohibited_exports=first.prohibited_exports,
+        operation_parameters=first.operation_parameters,
     )
 
     assert first.digest() != second.digest()
+
+
+def test_contract_digest_changes_when_operation_parameters_change():
+    authority = AuthorityMetadata(
+        declaration_id="REOS-003",
+        declaration_hash="a" * 64,
+        compiler_release="compiler-0.3.0",
+        compiler_digest="b" * 64,
+        generated_at="2026-08-05T18:00:00+00:00",
+    )
+
+    first = TransitionContract(
+        contract_id="CONTRACT-REOS-003",
+        transition_id="REOS-003",
+        authority=authority,
+        constitution_version="2.0.0",
+        contract_version="3.0.0",
+        allowed_operations=[
+            "detect_seam_activation",
+        ],
+        permitted_exports=[
+            "seam_activation_condition",
+        ],
+        prohibited_exports=[],
+        operation_parameters={
+            "detect_seam_activation": {
+                "maximum_score_gap": 0.10,
+                "minimum_top_score": 0.50,
+                "required_participant_count": 2,
+            }
+        },
+    )
+
+    second = TransitionContract(
+        contract_id="CONTRACT-REOS-003",
+        transition_id="REOS-003",
+        authority=authority,
+        constitution_version="2.0.0",
+        contract_version="3.0.0",
+        allowed_operations=[
+            "detect_seam_activation",
+        ],
+        permitted_exports=[
+            "seam_activation_condition",
+        ],
+        prohibited_exports=[],
+        operation_parameters={
+            "detect_seam_activation": {
+                "maximum_score_gap": 0.20,
+                "minimum_top_score": 0.50,
+                "required_participant_count": 2,
+            }
+        },
+    )
+
+    assert first.digest() != second.digest()
+
+
+def test_contract_operation_parameters_are_deterministic():
+    authority = AuthorityMetadata(
+        declaration_id="REOS-003",
+        declaration_hash="a" * 64,
+        compiler_release="compiler-0.3.0",
+        compiler_digest="b" * 64,
+        generated_at="2026-08-05T18:00:00+00:00",
+    )
+
+    parameters = {
+        "detect_seam_activation": {
+            "maximum_score_gap": 0.10,
+            "minimum_top_score": 0.50,
+            "required_participant_count": 2,
+        }
+    }
+
+    first = TransitionContract(
+        contract_id="CONTRACT-REOS-003",
+        transition_id="REOS-003",
+        authority=authority,
+        constitution_version="2.0.0",
+        contract_version="3.0.0",
+        allowed_operations=[
+            "detect_seam_activation",
+        ],
+        permitted_exports=[],
+        prohibited_exports=[],
+        operation_parameters=parameters,
+    )
+
+    second = TransitionContract(
+        contract_id="CONTRACT-REOS-003",
+        transition_id="REOS-003",
+        authority=authority,
+        constitution_version="2.0.0",
+        contract_version="3.0.0",
+        allowed_operations=[
+            "detect_seam_activation",
+        ],
+        permitted_exports=[],
+        prohibited_exports=[],
+        operation_parameters=parameters,
+    )
+
+    assert first.digest() == second.digest()

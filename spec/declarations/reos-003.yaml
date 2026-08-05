@@ -1,0 +1,144 @@
+id: REOS-003
+type: recognition_transition
+status: RATIFIED_CANDIDATE
+
+title: SEAM Activation and Boundary Tension Governance
+
+prerequisites:
+  - v0.1.0-reos-vs001
+  - v0.2.0-reos-vs002
+
+description: >
+  Extend deterministic multi-basin recognition by detecting whether
+  the score relationship between leading evaluated basins satisfies
+  compiler-issued SEAM activation conditions. Preserve basin selection
+  while allowing final orientation to remain explicitly boundary-bound
+  rather than collapsing into false single-basin certainty.
+
+inputs:
+  - governed_ingress_payload
+  - recognition_unit
+  - candidate_basin_evaluation
+  - basin_selection
+  - transition_contract
+
+outputs:
+  - seam_activation_condition
+  - orientation_resolution
+  - recognition_result
+  - transition_telemetry
+
+authorized_operations:
+  - ingress_hash
+  - instantiate_recognition_unit
+  - generate_candidate_basins
+  - evaluate_candidate_basins
+  - determine_primary_basin
+  - record_rejected_basins
+  - detect_seam_activation
+  - resolve_orientation
+  - assemble_recognition_result
+  - emit_transition_telemetry
+
+operation_parameters:
+  detect_seam_activation:
+    maximum_score_gap: 0.10
+    minimum_top_score: 0.50
+    required_participant_count: 2
+
+constraints:
+  deterministic_execution: true
+  candidate_population_preserved: true
+  candidate_scores_immutable: true
+  basin_selection_preserved: true
+  seam_threshold_compiler_issued: true
+  exactly_one_primary_basin_reference: true
+  seam_requires_two_distinct_basins: true
+  telemetry_required: true
+  provenance_required: true
+  independent_verification_required: true
+  fail_closed_on_lineage_mismatch: true
+  fail_closed_on_missing_parameters: true
+
+resolution_states:
+  - ORIENTED
+  - SEAM_ACTIVE
+  - AMBIGUOUS
+  - UNRESOLVED
+
+constitutional_actors:
+  seam_detector:
+    consumes:
+      - candidate_basin_evaluation
+      - transition_contract
+      - recognition_unit
+
+    produces:
+      - seam_activation_condition
+
+    owns:
+      - leading_candidate_gap_calculation
+      - threshold_comparison
+      - participating_basin_identification
+      - seam_activation_state
+
+    prohibited:
+      - candidate_generation
+      - candidate_score_modification
+      - primary_basin_selection
+      - orientation_resolution
+      - remedy_execution
+
+  orientation_resolver:
+    consumes:
+      - basin_selection
+      - seam_activation_condition
+
+    produces:
+      - orientation_resolution
+
+    owns:
+      - final_orientation_state
+      - binding_primary_basin_to_seam_state
+
+    prohibited:
+      - candidate_generation
+      - candidate_evaluation
+      - candidate_rescoring
+      - changing_primary_basin_selection
+      - remedy_execution
+
+prohibited_operations:
+  - fabricate_candidate_basin
+  - modify_candidate_score
+  - override_basin_selection
+  - execute_shunt
+  - ontology_resolution
+  - remedy_selection
+  - protocol_generation
+  - par_assembly
+  - governance_modification
+  - llm_threshold_generation
+
+out_of_scope:
+  - seam_stability_evaluation
+  - directional_momentum
+  - shunt_execution
+  - ontology_handoff
+  - rxreos
+  - remedy_output
+  - protocol_output
+  - par_assembly
+  - outcome_telemetry
+
+definition_of_done:
+  - seam_activation_condition_is_immutable
+  - seam_detector_uses_only_compiler_issued_parameters
+  - basin_selector_remains_unchanged
+  - orientation_resolver_is_independently_owned
+  - candidate_scores_remain_unchanged
+  - seam_detection_is_operation_gated
+  - recognition_result_supports_seam_active_resolution
+  - telemetry_preserves_selection_and_seam_lineage
+  - clean_room_verifier_reproduces_seam_activation
+  - all_vs001_and_vs002_regressions_remain_green

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import Any, Dict, List
 
 from runtime.serializer import canonical_hash
 
@@ -25,8 +25,11 @@ class TransitionContract:
     """
     Immutable compiler-issued execution mandate.
 
-    The contract authorizes operations.
-    It does not expose governance rule identifiers to the runtime.
+    The contract authorizes runtime operations and carries all
+    compiler-issued parameters required by those operations.
+
+    The runtime may consume these parameters.
+    It may not invent, default, or modify them.
     """
 
     contract_id: str
@@ -40,12 +43,17 @@ class TransitionContract:
     permitted_exports: List[str]
     prohibited_exports: List[str]
 
+    operation_parameters: Dict[str, Dict[str, Any]]
+
     def digest(self) -> str:
         """
         Return a deterministic digest of the complete authority mandate.
 
-        List order is normalized because authorization membership,
+        Authorization-list order is normalized because membership,
         not authoring order, defines the contract.
+
+        Operation parameters remain structurally canonicalized by
+        canonical_hash.
         """
         return canonical_hash(
             {
@@ -60,8 +68,15 @@ class TransitionContract:
                 },
                 "constitution_version": self.constitution_version,
                 "contract_version": self.contract_version,
-                "allowed_operations": sorted(self.allowed_operations),
-                "permitted_exports": sorted(self.permitted_exports),
-                "prohibited_exports": sorted(self.prohibited_exports),
+                "allowed_operations": sorted(
+                    self.allowed_operations
+                ),
+                "permitted_exports": sorted(
+                    self.permitted_exports
+                ),
+                "prohibited_exports": sorted(
+                    self.prohibited_exports
+                ),
+                "operation_parameters": self.operation_parameters,
             }
         )

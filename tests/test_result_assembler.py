@@ -50,6 +50,7 @@ def make_contract() -> TransitionContract:
             "remedy_selection",
             "protocol_generation",
         ],
+        operation_parameters={},
     )
 
 
