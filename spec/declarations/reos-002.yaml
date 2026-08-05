@@ -1,0 +1,61 @@
+id: REOS-002
+type: recognition_transition
+
+status: RATIFIED_CANDIDATE
+
+description: >
+  Transform one governed Recognition Unit into a deterministic
+  multi-candidate basin evaluation, selecting exactly one primary
+  basin while preserving all rejected basin candidates and their
+  exclusion basis.
+
+input:
+  - governed_ingress_payload
+  - recognition_unit
+  - transition_contract
+
+outputs:
+  - recognition_result
+  - transition_telemetry
+  - candidate_basin_evaluation
+
+authorized_operations:
+  - ingress_hash
+  - instantiate_recognition_unit
+  - generate_candidate_basins
+  - evaluate_candidate_basins
+  - determine_primary_basin
+  - record_rejected_basins
+
+constraints:
+  deterministic_execution: true
+  minimum_candidate_basins: 2
+  exactly_one_primary_basin: true
+  rejected_basin_evidence_required: true
+  telemetry_required: true
+  provenance_required: true
+  independent_verification_required: true
+  fail_closed_on_tie: true
+  fail_closed_on_no_match: true
+
+prohibited_operations:
+  - activate_seam
+  - execute_shunt
+  - ontology_resolution
+  - remedy_selection
+  - protocol_generation
+  - par_assembly
+  - telemetry_interpretation
+  - governance_modification
+
+termination_states:
+  - ORIENTED
+  - AMBIGUOUS
+  - UNRESOLVED
+
+out_of_scope:
+  - seam_geometry
+  - directional_momentum
+  - medicinal_reasoning
+  - remedy_output
+  - outcome_telemetry
