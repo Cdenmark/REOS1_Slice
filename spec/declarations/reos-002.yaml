@@ -26,6 +26,8 @@ authorized_operations:
   - evaluate_candidate_basins
   - determine_primary_basin
   - record_rejected_basins
+  - assemble_recognition_result
+  - emit_transition_telemetry
 
 constraints:
   deterministic_execution: true
