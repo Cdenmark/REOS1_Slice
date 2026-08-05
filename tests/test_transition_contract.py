@@ -51,6 +51,44 @@ def test_transition_contract_digest_is_deterministic():
     assert first.digest() == second.digest()
 
 
+def test_transition_contract_digest_is_deterministic_when_generated_at_is_defaulted():
+    first = TransitionContract(
+        contract_id="CONTRACT-REOS-001",
+        transition_id="REOS-001",
+        authority=AuthorityMetadata(
+            declaration_id="REOS-001",
+            declaration_hash="a" * 64,
+            compiler_release="compiler-0.1.0",
+            compiler_digest="b" * 64,
+            generated_at="1970-01-01T00:00:00+00:00",
+        ),
+        constitution_version="2.0.0",
+        contract_version="1.0.0",
+        allowed_operations=["ingress_hash"],
+        permitted_exports=["recognition_result"],
+        prohibited_exports=[],
+    )
+
+    second = TransitionContract(
+        contract_id="CONTRACT-REOS-001",
+        transition_id="REOS-001",
+        authority=AuthorityMetadata(
+            declaration_id="REOS-001",
+            declaration_hash="a" * 64,
+            compiler_release="compiler-0.1.0",
+            compiler_digest="b" * 64,
+            generated_at="1970-01-01T00:00:00+00:00",
+        ),
+        constitution_version="2.0.0",
+        contract_version="1.0.0",
+        allowed_operations=["ingress_hash"],
+        permitted_exports=["recognition_result"],
+        prohibited_exports=[],
+    )
+
+    assert first.digest() == second.digest()
+
+
 def test_transition_contract_digest_changes_when_authority_changes():
     first = make_contract(["ingress_hash"])
 

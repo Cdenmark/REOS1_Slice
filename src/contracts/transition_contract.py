@@ -1,5 +1,4 @@
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
 from typing import List
 
 from runtime.serializer import canonical_hash
@@ -18,9 +17,7 @@ class AuthorityMetadata:
     declaration_hash: str
     compiler_release: str
     compiler_digest: str
-    generated_at: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    generated_at: str
 
 
 @dataclass(frozen=True)
