@@ -1,0 +1,169 @@
+id: REOS-TOPOLOGY-001
+type: constitutional_infrastructure
+status: RATIFIED_CANDIDATE
+
+title: Directed Transition Topology Governance
+
+declaration_version: 1.0.0
+horizon: Infrastructure
+
+description: >
+  Establish constitutional governance for compiler-certified directed
+  basin connectivity. Define the actors, immutable artifacts, invariants,
+  provenance requirements, and independent verification necessary to
+  produce a standalone TransitionTopology that later execution contracts
+  may bind and consume without permitting runtime topology invention.
+
+prerequisites: []
+
+inputs:
+  - ratified_basin_registry
+  - ratified_edge_declarations
+
+outputs:
+  - transition_topology
+  - topology_provenance
+  - topology_verification_report
+
+governed_nouns:
+  - DirectedTransitionEdge
+  - TransitionTopology
+  - TopologyAuthorityMetadata
+  - TopologyProvenance
+  - TopologyVerificationReport
+
+authorized_relationship_types:
+  - DIRECT_MOVEMENT_ELIGIBILITY
+
+constitutional_actors:
+
+  topology_compiler:
+    consumes:
+      - ratified_basin_registry
+      - ratified_edge_declarations
+
+    produces:
+      - transition_topology
+      - topology_provenance
+
+    owns:
+      - basin-reference validation
+      - edge-authority validation
+      - relationship-type validation
+      - duplicate-edge rejection
+      - deterministic edge ordering
+      - topology identity construction
+      - topology digest construction
+      - compilation lineage
+
+    prohibited:
+      - runtime execution
+      - movement qualification
+      - momentum evaluation
+      - reverse-edge inference
+      - implicit edge generation
+      - post-compilation topology mutation
+
+  clean_room_topology_verifier:
+    consumes:
+      - ratified_basin_registry
+      - ratified_edge_declarations
+      - transition_topology
+      - topology_provenance
+
+    produces:
+      - topology_verification_report
+
+    owns:
+      - independent basin-reference verification
+      - independent edge-authority verification
+      - duplicate-edge verification
+      - directivity verification
+      - deterministic-content verification
+      - provenance verification
+
+    prohibited:
+      - topology construction
+      - topology identity construction
+      - edge generation
+      - runtime execution
+      - artifact mutation
+
+constitutional_invariants:
+
+  - invariant_id: INV-TOP-001
+    rule: >
+      Every source and target basin must exist in the supplied ratified
+      basin registry.
+
+  - invariant_id: INV-TOP-002
+    rule: >
+      Source and target basin identities must be distinct. Self-directed
+      edges are prohibited in REOS-TOPOLOGY-001.
+
+  - invariant_id: INV-TOP-003
+    rule: >
+      Every edge is explicitly directed. Reverse edges are never inferred,
+      generated, or authorized from the existence of a forward edge.
+
+  - invariant_id: INV-TOP-004
+    rule: >
+      Duplicate directed edge definitions fail closed.
+
+  - invariant_id: INV-TOP-005
+    rule: >
+      Every edge must use an explicitly authorized relationship type.
+      Unknown or unratified relationship types fail closed.
+
+  - invariant_id: INV-TOP-006
+    rule: >
+      Equivalent ratified structural content must produce equivalent
+      topology identity and digest.
+
+  - invariant_id: INV-TOP-007
+    rule: >
+      TransitionTopology and DirectedTransitionEdge are immutable data
+      artifacts and contain no embedded compiler behavior.
+
+  - invariant_id: INV-TOP-008
+    rule: >
+      Runtime components may consume only compiler-certified topology
+      artifacts bound by exact identity and digest. Runtime components
+      may not invent, infer, modify, or substitute topology.
+
+constraints:
+  deterministic_compilation: true
+  immutable_topology: true
+  reverse_edges_never_inferred: true
+  unknown_basins_fail_closed: true
+  duplicate_edges_fail_closed: true
+  unknown_relationship_types_fail_closed: true
+  provenance_required: true
+  independent_verification_required: true
+
+out_of_scope:
+  - runtime orientation
+  - directional candidate generation
+  - momentum evaluation
+  - movement qualification
+  - multi-hop traversal
+  - pathfinding
+  - seam interpretation
+  - shunt activation
+  - ontology handoff
+  - remedy selection
+  - protocol generation
+
+definition_of_done:
+  - immutable_topology_nouns_defined
+  - topology_compiler_independently_owned
+  - topology_verifier_has_zero_runtime_dependency
+  - source_and_target_basin_references_verified
+  - reverse_edges_are_not_inferred
+  - duplicate_edges_fail_closed
+  - unknown_relationship_types_fail_closed
+  - topology_identity_is_deterministic
+  - topology_digest_is_deterministic
+  - topology_provenance_is_complete
+  - clean_room_verification_passes
+  - all_existing_reos_regressions_remain_green
