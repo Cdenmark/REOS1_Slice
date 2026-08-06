@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from typing import Literal, get_args
+from typing import Literal, Tuple, get_args
+
+from foundation.topology_types import TransitionTopology
 
 
 RecognitionArtifactKind = Literal[
@@ -45,3 +47,41 @@ class FrozenRecognitionBundle:
             raise TypeError(
                 "artifact_bindings must be a tuple[RecognitionArtifactBinding, ...]"
             )
+
+
+TopologyVerificationStatus = Literal[
+    "VERIFIED",
+]
+
+
+@dataclass(frozen=True)
+class VerifiedTopologyBundle:
+    """
+    Immutable boundary noun representing the sole actionable
+    topology input for directional candidate generation.
+
+    The exact verified TransitionTopology snapshot is embedded so
+    unverified topology cannot re-enter downstream execution.
+
+    The duplicated topology identity fields are audit bindings only.
+    Downstream topology edges must be read exclusively from
+    topology_snapshot.
+
+    Verification, parity enforcement, digest matching, lawful
+    VERIFIED-state construction, and fail-closed behavior belong
+    strictly to TopologyBindingVerifier.
+    """
+
+    binding_id: str
+
+    topology_ref: str
+    topology_id: str
+    topology_version: str
+    topology_digest: str
+    topology_snapshot: TransitionTopology
+
+    bound_contract_id: str
+    bound_contract_digest: str
+
+    verification_state: TopologyVerificationStatus = "VERIFIED"
+    deterministic: bool = True
