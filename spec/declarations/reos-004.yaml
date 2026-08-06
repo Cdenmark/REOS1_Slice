@@ -59,6 +59,7 @@ movement_ingress_rule:
 
   independently_actionable_below_freeze_line:
     candidate_basin_evaluation: false
+    basin_selection: false
     seam_activation_condition: false
     orientation_resolution: false
     seam_aware_recognition_result: false
@@ -100,12 +101,31 @@ topology_authority:
 
 operation_parameters:
   bind_recognition_checkpoint:
+    required_artifact_count: 5
+
+    required_artifact_kinds:
+      - CANDIDATE_BASIN_EVALUATION
+      - BASIN_SELECTION
+      - SEAM_ACTIVATION_CONDITION
+      - ORIENTATION_RESOLUTION
+      - SEAM_AWARE_RECOGNITION_RESULT
+
     require_complete_recognition_artifact_set: true
     require_shared_recognition_unit_identity: true
     require_complete_artifact_digest_set: true
     require_checkpoint_digest: true
+
+    require_candidate_evaluation_to_selection_lineage: true
+    require_candidate_evaluation_to_seam_lineage: true
+    require_selection_to_orientation_lineage: true
+    require_seam_to_orientation_lineage: true
+    require_orientation_to_seam_aware_result_lineage: true
+    require_base_result_recognition_unit_parity: true
+    require_base_result_selection_outcome_parity: true
+
     prohibit_nested_artifact_omission: true
     prohibit_nested_artifact_mutation: true
+    prohibit_exact_selection_identity_claim_without_source_link: true
 
   verify_topology_binding:
     require_exact_topology_id: true
@@ -163,6 +183,10 @@ constraints:
   fail_closed_on_topology_binding_mismatch: true
   single_actionable_recognition_exit_required: true
   independent_recognition_inputs_below_freeze_prohibited: true
+  five_artifact_recognition_checkpoint_required: true
+  basin_selection_binding_required: true
+  base_result_selection_outcome_parity_required: true
+  exact_historical_selection_identity_not_asserted: true
   single_verified_topology_input_required: true
   unverified_topology_reentry_prohibited: true
   recognition_reinterpretation_below_freeze_prohibited: true
@@ -224,11 +248,12 @@ boundary_nouns:
     minimum_identity:
       - bundle_id
       - recognition_unit_id
-      - seam_aware_result_ref
-      - orientation_resolution_ref
       - candidate_evaluation_ref
+      - basin_selection_ref
       - seam_activation_condition_ref
-      - artifact_digests
+      - orientation_resolution_ref
+      - seam_aware_result_ref
+      - artifact_bindings
       - recognition_checkpoint_digest
 
     authority:
@@ -236,8 +261,17 @@ boundary_nouns:
 
     invariants:
       - all_nested_artifacts_are_immutable
-      - all_nested_artifacts_share_recognition_unit_identity
-      - digest_covers_complete_bundle
+      - all_nested_artifacts_form_one_verified_lineage_chain
+      - candidate_evaluation_and_seam_condition_share_recognition_unit_identity
+      - base_result_shares_recognition_unit_identity
+      - basin_selection_links_to_candidate_evaluation
+      - seam_condition_links_to_candidate_evaluation
+      - orientation_links_to_basin_selection
+      - orientation_links_to_seam_condition
+      - seam_aware_result_links_to_orientation
+      - base_result_selection_outcome_matches_basin_selection
+      - exact_selection_artifact_identity_is_not_claimed_without_preserved_source_link
+      - digest_covers_complete_five_artifact_bundle
       - no_nested_artifact_is_independently_actionable_downstream
 
   verified_topology_bundle:
@@ -266,6 +300,7 @@ constitutional_actors:
   recognition_checkpoint_binder:
     consumes:
       - candidate_basin_evaluation
+      - basin_selection
       - seam_activation_condition
       - orientation_resolution
       - seam_aware_recognition_result
@@ -274,8 +309,15 @@ constitutional_actors:
       - frozen_recognition_bundle
 
     owns:
-      - complete_recognition_artifact_binding
-      - shared_recognition_unit_identity_verification
+      - complete_five_artifact_recognition_binding
+      - direct_recognition_unit_identity_verification
+      - candidate_evaluation_to_selection_lineage_verification
+      - candidate_evaluation_to_seam_lineage_verification
+      - selection_to_orientation_lineage_verification
+      - seam_to_orientation_lineage_verification
+      - orientation_to_seam_aware_result_lineage_verification
+      - base_result_recognition_unit_parity_verification
+      - base_result_selection_outcome_parity_verification
       - nested_artifact_digest_binding
       - recognition_checkpoint_digest_construction
       - freeze_line_boundary_identity
@@ -289,6 +331,8 @@ constitutional_actors:
       - recognition_artifact_modification
       - required_artifact_omission
       - downstream_authority_assignment_to_nested_artifacts
+      - historical_selection_provenance_invention
+      - exact_selection_artifact_identity_claim_without_preserved_source_link
 
   topology_binding_verifier:
     consumes:
@@ -470,6 +514,9 @@ prohibited_operations:
   - llm_threshold_generation
   - independently_consume_nested_recognition_artifact
   - bypass_frozen_recognition_bundle
+  - omit_basin_selection_from_recognition_checkpoint
+  - accept_unlinked_basin_selection
+  - claim_exact_base_result_selection_identity_without_source_link
   - reenter_unverified_topology
   - bypass_verified_topology_bundle
   - reinterpret_frozen_recognition
@@ -525,6 +572,12 @@ definition_of_done:
   - clean_room_verifier_reproduces_movement_qualification
   - all_vs001_vs002_vs003_and_topology_regressions_remain_green
   - frozen_recognition_bundle_is_sole_actionable_recognition_exit
+  - frozen_recognition_bundle_contains_five_required_artifact_bindings
+  - basin_selection_is_bound_into_recognition_checkpoint
+  - basin_selection_links_to_candidate_evaluation
+  - orientation_links_to_exact_basin_selection_reference
+  - base_result_selection_outcome_matches_basin_selection
+  - binder_does_not_claim_unprovable_historical_selection_identity
   - nested_recognition_artifacts_are_evidence_only_below_freeze
   - verified_topology_bundle_is_sole_actionable_topology_input
   - unverified_topology_cannot_reenter_direction_generation
@@ -540,7 +593,10 @@ constitutional_leakage_audit:
   recognition_boundary:
     actionable_exits: 1
     canonical_exit: frozen_recognition_bundle
+    required_bound_artifact_count: 5
+    basin_selection_binding: required
     independent_recognition_inputs_below_freeze_line: 0
+    exact_selection_identity_claim_without_source_link: forbidden
 
   topology_boundary:
     actionable_inputs: 1
