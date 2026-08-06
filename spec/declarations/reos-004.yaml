@@ -34,6 +34,11 @@ constitutional_intent:
   - preserve uncertainty when no single direction qualifies
   - prevent active SEAM state from silently becoming movement authority
   - prevent runtime topology invention or substitution
+  - establish one canonical actionable recognition boundary below the Recognition Freeze Line
+  - establish one canonical verified topology boundary for directional generation
+  - prohibit independent downstream authority for nested recognition evidence
+  - preserve directional candidate identity and population through momentum evaluation
+  - require typed qualification reasons and termination evidence
 
 inputs:
   - recognition_unit
@@ -45,7 +50,23 @@ inputs:
   - transition_topology
   - transition_contract
 
+movement_ingress_rule:
+  sole_actionable_recognition_input:
+    - frozen_recognition_bundle
+
+  sole_actionable_topology_input:
+    - verified_topology_bundle
+
+  independently_actionable_below_freeze_line:
+    candidate_basin_evaluation: false
+    seam_activation_condition: false
+    orientation_resolution: false
+    seam_aware_recognition_result: false
+    transition_topology: false
+
 outputs:
+  - frozen_recognition_bundle
+  - verified_topology_bundle
   - directional_candidate_set
   - directional_momentum_assessment
   - movement_qualification_result
@@ -61,6 +82,7 @@ authorized_operations:
   - detect_seam_activation
   - resolve_orientation
   - assemble_recognition_result
+  - bind_recognition_checkpoint
   - verify_topology_binding
   - generate_directional_candidates
   - evaluate_directional_momentum
@@ -77,10 +99,22 @@ topology_authority:
     - DIRECT_MOVEMENT_ELIGIBILITY
 
 operation_parameters:
+  bind_recognition_checkpoint:
+    require_complete_recognition_artifact_set: true
+    require_shared_recognition_unit_identity: true
+    require_complete_artifact_digest_set: true
+    require_checkpoint_digest: true
+    prohibit_nested_artifact_omission: true
+    prohibit_nested_artifact_mutation: true
+
   verify_topology_binding:
     require_exact_topology_id: true
     require_exact_topology_version: true
     require_exact_topology_digest: true
+    require_bound_contract_id: true
+    require_bound_contract_digest: true
+    embed_verified_topology_snapshot: true
+    prohibit_unverified_topology_reentry: true
     fail_closed_on_mismatch: true
 
   generate_directional_candidates:
@@ -127,6 +161,17 @@ constraints:
   fail_closed_on_missing_parameters: true
   fail_closed_on_unknown_target_basin: true
   fail_closed_on_topology_binding_mismatch: true
+  single_actionable_recognition_exit_required: true
+  independent_recognition_inputs_below_freeze_prohibited: true
+  single_verified_topology_input_required: true
+  unverified_topology_reentry_prohibited: true
+  recognition_reinterpretation_below_freeze_prohibited: true
+  candidate_population_preservation_required: true
+  candidate_identity_preservation_required: true
+  typed_qualification_reason_required: true
+  typed_ambiguity_evidence_required: true
+  typed_unresolved_requirements_required: true
+  foundation_domain_semantics_prohibited: true
 
 movement_states:
   - QUALIFIED
@@ -134,53 +179,167 @@ movement_states:
   - AMBIGUOUS
   - UNRESOLVED
 
+qualification_reason_codes:
+  - QUALIFIED_SINGLE_DIRECTION
+  - NO_DIRECTION_MEETS_THRESHOLD
+  - MULTIPLE_DIRECTIONS_MEET_THRESHOLD
+  - INSUFFICIENT_EVIDENCE_ITEMS
+  - MISSING_REQUIRED_LINEAGE
+  - CANDIDATE_POPULATION_MISMATCH
+  - TOPOLOGY_BINDING_INVALID
+  - RECOGNITION_CHECKPOINT_INVALID
+
+ambiguity_codes:
+  - MULTIPLE_EQUAL_QUALIFIED_DIRECTIONS
+  - MULTIPLE_NONDOMINANT_DIRECTIONS
+
+unresolved_requirement_codes:
+  - REQUIRED_EVIDENCE_MISSING
+  - REQUIRED_LINEAGE_MISSING
+  - REQUIRED_CONTRACT_PARAMETER_MISSING
+  - CANDIDATE_NOT_SCORABLE
+
+qualification_evidence_requirements:
+  required_fields:
+    - reason_code
+    - candidate_refs
+    - evidence_refs
+    - governing_rule_refs
+    - assessment_digest
+    - contract_digest
+
+  conditional_fields:
+    AMBIGUOUS:
+      - ambiguity_code
+
+    UNRESOLVED:
+      - unresolved_requirements
+
+  runtime_defined_reason_codes_prohibited: true
+
+boundary_nouns:
+  frozen_recognition_bundle:
+    constitutional_category: IMMUTABLE_BOUNDARY_BUNDLE
+
+    minimum_identity:
+      - bundle_id
+      - recognition_unit_id
+      - seam_aware_result_ref
+      - orientation_resolution_ref
+      - candidate_evaluation_ref
+      - seam_activation_condition_ref
+      - artifact_digests
+      - recognition_checkpoint_digest
+
+    authority:
+      - sole_actionable_recognition_input_below_freeze_line
+
+    invariants:
+      - all_nested_artifacts_are_immutable
+      - all_nested_artifacts_share_recognition_unit_identity
+      - digest_covers_complete_bundle
+      - no_nested_artifact_is_independently_actionable_downstream
+
+  verified_topology_bundle:
+    constitutional_category: IMMUTABLE_BOUNDARY_BUNDLE
+
+    minimum_identity:
+      - binding_id
+      - topology_ref
+      - topology_id
+      - topology_version
+      - topology_digest
+      - bound_contract_id
+      - bound_contract_digest
+      - verification_state
+
+    authority:
+      - sole_actionable_topology_input_for_direction_generation
+
+    invariants:
+      - exact_verified_topology_snapshot_is_bound
+      - topology_and_contract_identity_are_immutable
+      - unverified_topology_reentry_is_prohibited
+      - digest_mismatch_fails_closed
+
 constitutional_actors:
+  recognition_checkpoint_binder:
+    consumes:
+      - candidate_basin_evaluation
+      - seam_activation_condition
+      - orientation_resolution
+      - seam_aware_recognition_result
+
+    produces:
+      - frozen_recognition_bundle
+
+    owns:
+      - complete_recognition_artifact_binding
+      - shared_recognition_unit_identity_verification
+      - nested_artifact_digest_binding
+      - recognition_checkpoint_digest_construction
+      - freeze_line_boundary_identity
+
+    prohibited:
+      - candidate_rescoring
+      - basin_selection
+      - seam_activation
+      - seam_deactivation
+      - orientation_reinterpretation
+      - recognition_artifact_modification
+      - required_artifact_omission
+      - downstream_authority_assignment_to_nested_artifacts
+
   topology_binding_verifier:
     consumes:
       - transition_topology
       - transition_contract
 
     produces:
-      - verified_topology_binding
+      - verified_topology_bundle
 
     owns:
       - topology_identity_parity
       - topology_version_parity
       - topology_digest_parity
+      - contract_identity_binding
+      - contract_digest_binding
+      - exact_topology_snapshot_binding
       - fail_closed_binding_state
 
     prohibited:
-      - topology construction
-      - topology modification
+      - topology_construction
+      - topology_modification
       - edge generation
       - reverse_edge_inference
+      - contract_authority_reinterpretation
+      - mismatch_repair
+      - silent_digest_mismatch_acceptance
       - directional_candidate_generation
       - momentum_evaluation
       - movement_qualification
-      - runtime_execution
 
   directional_candidate_generator:
     consumes:
-      - verified_topology_binding
-      - transition_topology
-      - orientation_resolution
-      - seam_activation_condition
-      - candidate_basin_evaluation
+      - frozen_recognition_bundle
+      - verified_topology_bundle
       - transition_contract
 
     produces:
       - directional_candidate_set
 
     owns:
-      - source_basin_binding
-      - one_hop_edge_lookup
+      - frozen_source_basin_binding
+      - deterministic_frozen_predicate_matching
+      - verified_one_hop_edge_admission
       - ratified_edge_filtering
-      - contextual_direction_admission
+      - contract_rule_application
+      - directional_candidate_identity_construction
       - candidate_generation_lineage
 
     prohibited:
-      - topology construction
-      - topology modification
+      - topology_construction
+      - topology_modification
       - multi_hop_traversal
       - reverse_edge_inference
       - implicit_edge_generation
@@ -192,12 +351,30 @@ constitutional_actors:
       - shunt_activation
       - ontology_handoff
       - remedy_selection
+      - recognition_reconsideration
+      - candidate_basin_rescoring
+      - primary_basin_reselection
+      - seam_state_reinterpretation
+      - orientation_validation
+      - topology_substitution
+      - unverified_topology_consumption
+      - contextual_domain_reasoning
+
+    admission_rule:
+      all_required:
+        - verified_topology_contains_edge
+        - frozen_recognition_predicate_is_present
+        - transition_contract_authorizes_relation
+
+      prohibited_basis:
+        - new_biological_inference
+        - recognition_reinterpretation
+        - topology_inference
 
   directional_momentum_evaluator:
     consumes:
       - directional_candidate_set
-      - candidate_basin_evaluation
-      - orientation_resolution
+      - frozen_recognition_bundle
       - transition_contract
 
     produces:
@@ -207,6 +384,8 @@ constitutional_actors:
       - directional_evidence_scoring
       - directional_evidence_basis
       - candidate_momentum_state
+      - complete_candidate_population_annotation
+      - unresolved_candidate_state_assignment
 
     prohibited:
       - generating_directional_candidates
@@ -220,11 +399,24 @@ constitutional_actors:
       - shunt_activation
       - ontology_handoff
       - remedy_selection
+      - candidate_creation
+      - candidate_removal
+      - candidate_replacement
+      - silent_candidate_suppression
+      - topology_edge_substitution
+      - source_basin_modification
+      - target_basin_modification
+      - recognition_reinterpretation
+      - semantic_reordering
+
+    population_invariant:
+      input_candidate_ids_must_equal_output_evaluated_candidate_ids: true
+      unscorable_candidate_state: UNRESOLVED
 
   movement_qualifier:
     consumes:
       - directional_momentum_assessment
-      - orientation_resolution
+      - frozen_recognition_bundle
       - transition_contract
 
     produces:
@@ -235,6 +427,10 @@ constitutional_actors:
       - qualified_direction_reference
       - ambiguity_termination
       - unresolved_termination
+      - typed_reason_code_assignment
+      - typed_ambiguity_code_assignment
+      - unresolved_requirement_recording
+      - governing_rule_reference_binding
 
     prohibited:
       - generating_directional_candidates
@@ -272,6 +468,15 @@ prohibited_operations:
   - governance_modification
   - llm_direction_generation
   - llm_threshold_generation
+  - independently_consume_nested_recognition_artifact
+  - bypass_frozen_recognition_bundle
+  - reenter_unverified_topology
+  - bypass_verified_topology_bundle
+  - reinterpret_frozen_recognition
+  - remove_directional_candidate
+  - replace_directional_candidate
+  - suppress_unscorable_candidate
+  - invent_qualification_reason_code
 
 out_of_scope:
   - topology compilation
@@ -319,3 +524,50 @@ definition_of_done:
   - telemetry_records_complete_movement_qualification_lineage
   - clean_room_verifier_reproduces_movement_qualification
   - all_vs001_vs002_vs003_and_topology_regressions_remain_green
+  - frozen_recognition_bundle_is_sole_actionable_recognition_exit
+  - nested_recognition_artifacts_are_evidence_only_below_freeze
+  - verified_topology_bundle_is_sole_actionable_topology_input
+  - unverified_topology_cannot_reenter_direction_generation
+  - directional_generation_uses_deterministic_predicate_matching_only
+  - directional_candidate_population_is_preserved_during_evaluation
+  - directional_candidate_identity_is_preserved_during_evaluation
+  - unscorable_candidates_remain_present_as_unresolved
+  - movement_qualification_contains_typed_reason_evidence
+  - delegated_authority_chain_is_independently_traversable
+  - foundation_services_remain_domain_neutral
+
+constitutional_leakage_audit:
+  recognition_boundary:
+    actionable_exits: 1
+    canonical_exit: frozen_recognition_bundle
+    independent_recognition_inputs_below_freeze_line: 0
+
+  topology_boundary:
+    actionable_inputs: 1
+    canonical_input: verified_topology_bundle
+    separately_supplied_unverified_topology: forbidden
+
+  directional_generation:
+    recognition_reinterpretation: forbidden
+    topology_invention: forbidden
+    contract_bypass: forbidden
+
+  momentum_evaluation:
+    candidate_population_preserved: required
+    candidate_identity_preserved: required
+    silent_candidate_loss: forbidden
+
+  qualification:
+    typed_termination_state: required
+    typed_reason_code: required
+    typed_ambiguity_evidence: required
+    typed_unresolved_requirements: required
+
+  clean_room_verification:
+    delegated_authority_chain_traversable: required
+    runtime_imports: forbidden
+
+  foundation:
+    domain_semantics: forbidden
+
+  result: LEAK_FREE
