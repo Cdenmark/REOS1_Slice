@@ -1,0 +1,230 @@
+id: REOS-004
+type: recognition_transition
+status: RATIFIED_CANDIDATE
+
+title: Directional Momentum Qualification
+
+horizon: Movement Horizon
+
+prerequisites:
+  - v0.1.0-reos-vs001
+  - v0.2.0-reos-vs002
+  - v0.3.0-reos-vs003
+
+description: >
+  Extend a constitutionally resolved recognition state into a governed
+  directional-momentum assessment without executing movement, changing
+  basin orientation, activating a Shunt, invoking Ontology, selecting a
+  remedy, or producing a protocol.
+
+  REOS-004 determines whether the completed recognition state contains
+  sufficient governed evidence to support a directional relationship
+  toward another constitutionally known basin.
+
+constitutional_intent:
+  - preserve the frozen Recognition Horizon
+  - distinguish recognized position from permissible movement
+  - qualify directional evidence without executing a transition
+  - preserve uncertainty when directional evidence is insufficient
+  - emit an immutable movement-candidate artifact
+  - prevent SEAM state from silently becoming transition authority
+
+inputs:
+  - recognition_unit
+  - candidate_basin_evaluation
+  - basin_selection
+  - seam_activation_condition
+  - orientation_resolution
+  - seam_aware_recognition_result
+  - transition_contract
+
+outputs:
+  - momentum_candidate_set
+  - directional_momentum_assessment
+  - movement_qualification_result
+  - transition_telemetry
+
+authorized_operations:
+  - ingress_hash
+  - instantiate_recognition_unit
+  - generate_candidate_basins
+  - evaluate_candidate_basins
+  - determine_primary_basin
+  - record_rejected_basins
+  - detect_seam_activation
+  - resolve_orientation
+  - assemble_recognition_result
+  - generate_momentum_candidates
+  - evaluate_directional_momentum
+  - qualify_movement
+  - emit_transition_telemetry
+
+operation_parameters:
+  generate_momentum_candidates:
+    minimum_candidate_count: 1
+    maximum_candidate_count: 3
+
+  evaluate_directional_momentum:
+    minimum_directional_evidence_score: 0.60
+    minimum_evidence_item_count: 1
+    require_distinct_source_and_target: true
+
+  qualify_movement:
+    permit_from_oriented_state: true
+    permit_from_seam_active_state: true
+    require_single_qualified_direction: true
+    fail_closed_on_tie: true
+    fail_closed_on_no_qualified_direction: true
+
+constraints:
+  deterministic_execution: true
+  recognition_state_immutable: true
+  primary_basin_immutable: true
+  seam_state_immutable: true
+  candidate_scores_immutable: true
+  movement_is_qualified_not_executed: true
+  directional_target_must_be_known_basin: true
+  source_and_target_must_be_distinct: true
+  compiler_parameters_required: true
+  telemetry_required: true
+  provenance_required: true
+  independent_verification_required: true
+  fail_closed_on_lineage_mismatch: true
+  fail_closed_on_missing_parameters: true
+  fail_closed_on_unknown_target_basin: true
+
+movement_states:
+  - QUALIFIED
+  - NOT_QUALIFIED
+  - AMBIGUOUS
+  - UNRESOLVED
+
+constitutional_actors:
+  momentum_candidate_generator:
+    consumes:
+      - candidate_basin_evaluation
+      - basin_selection
+      - orientation_resolution
+      - transition_contract
+
+    produces:
+      - momentum_candidate_set
+
+    owns:
+      - eligible_direction_discovery
+      - source_basin_binding
+      - candidate_target_presence
+      - candidate_generation_lineage
+
+    prohibited:
+      - candidate_score_assignment
+      - movement_qualification
+      - basin_selection
+      - seam_detection
+      - transition_execution
+      - shunt_activation
+      - ontology_handoff
+      - remedy_selection
+
+  directional_momentum_evaluator:
+    consumes:
+      - momentum_candidate_set
+      - candidate_basin_evaluation
+      - orientation_resolution
+      - transition_contract
+
+    produces:
+      - directional_momentum_assessment
+
+    owns:
+      - directional_evidence_scoring
+      - directional_evidence_basis
+      - candidate_momentum_state
+
+    prohibited:
+      - generating new movement candidates
+      - changing source basin
+      - changing target basin identities
+      - changing recognition state
+      - movement_qualification
+      - transition_execution
+      - shunt_activation
+      - ontology_handoff
+      - remedy_selection
+
+  movement_qualifier:
+    consumes:
+      - directional_momentum_assessment
+      - orientation_resolution
+      - transition_contract
+
+    produces:
+      - movement_qualification_result
+
+    owns:
+      - final movement qualification state
+      - qualified direction reference
+      - ambiguity and unresolved termination
+
+    prohibited:
+      - generating momentum candidates
+      - assigning momentum scores
+      - changing basin orientation
+      - changing seam state
+      - executing movement
+      - activating a shunt
+      - ontology_handoff
+      - remedy_selection
+      - protocol_generation
+
+prohibited_operations:
+  - modify_recognition_unit
+  - modify_candidate_evaluation
+  - replace_primary_basin
+  - modify_seam_state
+  - fabricate_directional_target
+  - execute_directional_movement
+  - activate_shunt
+  - execute_shunt
+  - ontology_resolution
+  - ontology_handoff
+  - remedy_selection
+  - protocol_generation
+  - par_assembly
+  - governance_modification
+  - llm_direction_generation
+  - llm_threshold_generation
+
+out_of_scope:
+  - Shunt activation
+  - Shunt execution
+  - actual basin migration
+  - directional path execution
+  - Ontology handoff
+  - Ontology resolution
+  - RxREOS
+  - remedy selection
+  - dosage
+  - preparation
+  - timing
+  - frequency
+  - protocol generation
+  - PAR assembly
+  - outcome telemetry
+  - governance promotion
+
+definition_of_done:
+  - momentum_candidate_set_is_immutable
+  - directional_momentum_assessment_is_immutable
+  - movement_qualification_result_is_immutable
+  - recognition_horizon_artifacts_remain_unmodified
+  - momentum_candidate_generation_is_independently_owned
+  - directional_evaluation_is_independently_owned
+  - movement_qualification_is_independently_owned
+  - compiler_parameters_are_required
+  - source_and_target_basin_lineage_is_preserved
+  - no_movement_is_executed
+  - no_shunt_is_activated
+  - telemetry_records_complete_movement_qualification_lineage
+  - clean_room_verifier_reproduces_movement_qualification
+  - all_vs001_vs002_and_vs003_regressions_remain_green
