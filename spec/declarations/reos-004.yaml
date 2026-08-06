@@ -1,6 +1,6 @@
 id: REOS-004
 type: recognition_transition
-status: RATIFIED_CANDIDATE
+status: RATIFIED
 
 title: Directional Momentum Qualification
 
@@ -10,24 +10,30 @@ prerequisites:
   - v0.1.0-reos-vs001
   - v0.2.0-reos-vs002
   - v0.3.0-reos-vs003
+  - v1.0.0-reos-topology-001
 
 description: >
-  Extend a constitutionally resolved recognition state into a governed
-  directional-momentum assessment without executing movement, changing
-  basin orientation, activating a Shunt, invoking Ontology, selecting a
-  remedy, or producing a protocol.
+  Extend a constitutionally resolved recognition state into governed
+  directional admission, momentum assessment, and movement qualification.
 
-  REOS-004 determines whether the completed recognition state contains
-  sufficient governed evidence to support a directional relationship
-  toward another constitutionally known basin.
+  REOS-004 consumes a compiler-certified TransitionTopology bound by exact
+  identity and digest through TransitionContract. Runtime components may
+  contextualize ratified one-hop directed edges but may not invent, infer,
+  modify, substitute, or expand topology.
+
+  REOS-004 qualifies whether one admitted directional relationship possesses
+  sufficient governed evidence for later movement processing. It does not
+  execute movement, activate a Shunt, invoke Ontology, select a remedy, or
+  produce a protocol.
 
 constitutional_intent:
   - preserve the frozen Recognition Horizon
-  - distinguish recognized position from permissible movement
-  - qualify directional evidence without executing a transition
-  - preserve uncertainty when directional evidence is insufficient
-  - emit an immutable movement-candidate artifact
-  - prevent SEAM state from silently becoming transition authority
+  - consume frozen REOS-TOPOLOGY-001 structural law
+  - distinguish structural direction from evidentiary momentum
+  - qualify directional evidence without executing movement
+  - preserve uncertainty when no single direction qualifies
+  - prevent active SEAM state from silently becoming movement authority
+  - prevent runtime topology invention or substitution
 
 inputs:
   - recognition_unit
@@ -36,10 +42,11 @@ inputs:
   - seam_activation_condition
   - orientation_resolution
   - seam_aware_recognition_result
+  - transition_topology
   - transition_contract
 
 outputs:
-  - momentum_candidate_set
+  - directional_candidate_set
   - directional_momentum_assessment
   - movement_qualification_result
   - transition_telemetry
@@ -54,15 +61,36 @@ authorized_operations:
   - detect_seam_activation
   - resolve_orientation
   - assemble_recognition_result
-  - generate_momentum_candidates
+  - verify_topology_binding
+  - generate_directional_candidates
   - evaluate_directional_momentum
   - qualify_movement
   - emit_transition_telemetry
 
+topology_authority:
+  required: true
+  topology_id: TT-REOS-001
+  topology_version: 1.0.0
+  topology_digest: COMPILER_BOUND
+  maximum_hops: 1
+  permitted_relationship_types:
+    - DIRECT_MOVEMENT_ELIGIBILITY
+
 operation_parameters:
-  generate_momentum_candidates:
-    minimum_candidate_count: 1
+  verify_topology_binding:
+    require_exact_topology_id: true
+    require_exact_topology_version: true
+    require_exact_topology_digest: true
+    fail_closed_on_mismatch: true
+
+  generate_directional_candidates:
+    maximum_hops: 1
+    minimum_candidate_count: 0
     maximum_candidate_count: 3
+    require_source_primary_basin_match: true
+    require_ratified_edge_status: true
+    permitted_relationship_types:
+      - DIRECT_MOVEMENT_ELIGIBILITY
 
   evaluate_directional_momentum:
     minimum_directional_evidence_score: 0.60
@@ -82,6 +110,12 @@ constraints:
   primary_basin_immutable: true
   seam_state_immutable: true
   candidate_scores_immutable: true
+  transition_topology_immutable: true
+  topology_binding_required: true
+  runtime_topology_invention_prohibited: true
+  runtime_reverse_edge_inference_prohibited: true
+  runtime_topology_substitution_prohibited: true
+  single_hop_only: true
   movement_is_qualified_not_executed: true
   directional_target_must_be_known_basin: true
   source_and_target_must_be_distinct: true
@@ -92,6 +126,7 @@ constraints:
   fail_closed_on_lineage_mismatch: true
   fail_closed_on_missing_parameters: true
   fail_closed_on_unknown_target_basin: true
+  fail_closed_on_topology_binding_mismatch: true
 
 movement_states:
   - QUALIFIED
@@ -100,24 +135,56 @@ movement_states:
   - UNRESOLVED
 
 constitutional_actors:
-  momentum_candidate_generator:
+  topology_binding_verifier:
     consumes:
-      - candidate_basin_evaluation
-      - basin_selection
-      - orientation_resolution
+      - transition_topology
       - transition_contract
 
     produces:
-      - momentum_candidate_set
+      - verified_topology_binding
 
     owns:
-      - eligible_direction_discovery
+      - topology_identity_parity
+      - topology_version_parity
+      - topology_digest_parity
+      - fail_closed_binding_state
+
+    prohibited:
+      - topology construction
+      - topology modification
+      - edge generation
+      - reverse_edge_inference
+      - directional_candidate_generation
+      - momentum_evaluation
+      - movement_qualification
+      - runtime_execution
+
+  directional_candidate_generator:
+    consumes:
+      - verified_topology_binding
+      - transition_topology
+      - orientation_resolution
+      - seam_activation_condition
+      - candidate_basin_evaluation
+      - transition_contract
+
+    produces:
+      - directional_candidate_set
+
+    owns:
       - source_basin_binding
-      - candidate_target_presence
+      - one_hop_edge_lookup
+      - ratified_edge_filtering
+      - contextual_direction_admission
       - candidate_generation_lineage
 
     prohibited:
-      - candidate_score_assignment
+      - topology construction
+      - topology modification
+      - multi_hop_traversal
+      - reverse_edge_inference
+      - implicit_edge_generation
+      - directional_score_assignment
       - movement_qualification
       - basin_selection
       - seam_detection
@@ -128,7 +195,7 @@ constitutional_actors:
 
   directional_momentum_evaluator:
     consumes:
-      - momentum_candidate_set
+      - directional_candidate_set
       - candidate_basin_evaluation
       - orientation_resolution
       - transition_contract
@@ -142,10 +209,12 @@ constitutional_actors:
       - candidate_momentum_state
 
     prohibited:
-      - generating new movement candidates
-      - changing source basin
-      - changing target basin identities
-      - changing recognition state
+      - generating_directional_candidates
+      - topology_lookup
+      - topology_modification
+      - changing_source_basin
+      - changing_target_basin_identities
+      - changing_recognition_state
       - movement_qualification
       - transition_execution
       - shunt_activation
@@ -162,17 +231,20 @@ constitutional_actors:
       - movement_qualification_result
 
     owns:
-      - final movement qualification state
-      - qualified direction reference
-      - ambiguity and unresolved termination
+      - final_movement_qualification_state
+      - qualified_direction_reference
+      - ambiguity_termination
+      - unresolved_termination
 
     prohibited:
-      - generating momentum candidates
-      - assigning momentum scores
-      - changing basin orientation
-      - changing seam state
-      - executing movement
-      - activating a shunt
+      - generating_directional_candidates
+      - assigning_momentum_scores
+      - topology_lookup
+      - topology_modification
+      - changing_basin_orientation
+      - changing_seam_state
+      - executing_movement
+      - activating_shunt
       - ontology_handoff
       - remedy_selection
       - protocol_generation
@@ -183,6 +255,12 @@ prohibited_operations:
   - replace_primary_basin
   - modify_seam_state
   - fabricate_directional_target
+  - invent_topology
+  - infer_topology
+  - substitute_topology
+  - modify_topology
+  - infer_reverse_edge
+  - perform_multi_hop_traversal
   - execute_directional_movement
   - activate_shunt
   - execute_shunt
@@ -196,35 +274,48 @@ prohibited_operations:
   - llm_threshold_generation
 
 out_of_scope:
-  - Shunt activation
-  - Shunt execution
-  - actual basin migration
-  - directional path execution
-  - Ontology handoff
-  - Ontology resolution
-  - RxREOS
-  - remedy selection
+  - topology compilation
+  - topology governance
+  - topology mutation
+  - multi_hop_traversal
+  - pathfinding
+  - momentum_equilibrium
+  - barrier_resistance
+  - transition_constraint_assessment
+  - shunt_activation
+  - shunt_execution
+  - actual_basin_migration
+  - directional_path_execution
+  - ontology_handoff
+  - ontology_resolution
+  - rxreos
+  - remedy_selection
   - dosage
   - preparation
   - timing
   - frequency
-  - protocol generation
-  - PAR assembly
-  - outcome telemetry
-  - governance promotion
+  - protocol_generation
+  - par_assembly
+  - outcome_telemetry
+  - governance_promotion
 
 definition_of_done:
-  - momentum_candidate_set_is_immutable
+  - transition_topology_is_required_input
+  - topology_binding_is_verified_before_direction_generation
+  - directional_candidate_set_is_immutable
   - directional_momentum_assessment_is_immutable
   - movement_qualification_result_is_immutable
   - recognition_horizon_artifacts_remain_unmodified
-  - momentum_candidate_generation_is_independently_owned
-  - directional_evaluation_is_independently_owned
+  - topology_artifact_remains_unmodified
+  - directional_candidate_generation_is_independently_owned
+  - directional_momentum_evaluation_is_independently_owned
   - movement_qualification_is_independently_owned
   - compiler_parameters_are_required
   - source_and_target_basin_lineage_is_preserved
+  - only_ratified_one_hop_edges_are_admitted
+  - reverse_edges_are_never_inferred
   - no_movement_is_executed
   - no_shunt_is_activated
   - telemetry_records_complete_movement_qualification_lineage
   - clean_room_verifier_reproduces_movement_qualification
-  - all_vs001_vs002_and_vs003_regressions_remain_green
+  - all_vs001_vs002_vs003_and_topology_regressions_remain_green
