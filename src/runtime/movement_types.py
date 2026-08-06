@@ -1,52 +1,61 @@
 from dataclasses import dataclass
-from typing import Literal, Tuple, get_args
+from typing import Literal, Tuple
 
 from foundation.topology_types import TransitionTopology
 
 
 RecognitionArtifactKind = Literal[
-    "candidate_basin_evaluation",
-    "seam_activation_condition",
-    "orientation_resolution",
-    "seam_aware_recognition_result",
+    "CANDIDATE_BASIN_EVALUATION",
+    "BASIN_SELECTION",
+    "SEAM_ACTIVATION_CONDITION",
+    "ORIENTATION_RESOLUTION",
+    "SEAM_AWARE_RECOGNITION_RESULT",
 ]
 
 
 @dataclass(frozen=True)
 class RecognitionArtifactBinding:
-    """Immutable reference and digest for one recognition artifact."""
+    """
+    Immutable identity-and-digest binding for one required
+    Recognition Horizon artifact.
+    """
 
     artifact_kind: RecognitionArtifactKind
     artifact_id: str
     artifact_digest: str
 
-    def __post_init__(self) -> None:
-        allowed_kinds = get_args(RecognitionArtifactKind)
-        if self.artifact_kind not in allowed_kinds:
-            raise ValueError(
-                "artifact_kind must be one of: "
-                + ", ".join(allowed_kinds)
-            )
-
 
 @dataclass(frozen=True)
 class FrozenRecognitionBundle:
-    """Canonical immutable recognition boundary below the freeze line."""
+    """
+    Immutable boundary noun representing the sole actionable
+    Recognition checkpoint below the Recognition Freeze Line.
+
+    The explicit reference fields are named constitutional identity
+    projections. The artifact_bindings tuple carries the corresponding
+    content-addressed identity and digest records.
+
+    Construction, completeness validation, reference-to-binding parity,
+    lineage verification, and digest derivation belong exclusively to
+    RecognitionCheckpointBinder.
+    """
 
     bundle_id: str
     recognition_unit_id: str
-    seam_aware_result_ref: str
-    orientation_resolution_ref: str
-    candidate_evaluation_ref: str
-    seam_activation_condition_ref: str
-    artifact_bindings: tuple[RecognitionArtifactBinding, ...]
-    recognition_checkpoint_digest: str
 
-    def __post_init__(self) -> None:
-        if not isinstance(self.artifact_bindings, tuple):
-            raise TypeError(
-                "artifact_bindings must be a tuple[RecognitionArtifactBinding, ...]"
-            )
+    candidate_evaluation_ref: str
+    basin_selection_ref: str
+    seam_activation_condition_ref: str
+    orientation_resolution_ref: str
+    seam_aware_result_ref: str
+
+    artifact_bindings: Tuple[
+        RecognitionArtifactBinding,
+        ...
+    ]
+
+    recognition_checkpoint_digest: str
+    deterministic: bool = True
 
 
 TopologyVerificationStatus = Literal[
