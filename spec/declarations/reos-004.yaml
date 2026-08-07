@@ -126,6 +126,34 @@ operation_parameters:
     canonical_artifact_binding_sequence_required: true
     artifact_binding_sequence_is_identity_bearing: true
 
+    stateless_operation_required: true
+    mutable_actor_state_prohibited: true
+
+    boundary_opacity_rules:
+      candidate_scores_are_semantically_opaque: true
+      evidence_basis_is_semantically_opaque: true
+      seam_metrics_are_semantically_opaque: true
+      orientation_meaning_is_semantically_opaque: true
+
+      complete_artifact_state_may_be_serialized_for_digest: true
+
+      prohibit_candidate_score_interpretation: true
+      prohibit_candidate_score_thresholding: true
+      prohibit_candidate_ranking: true
+      prohibit_evidence_quality_judgment: true
+
+      prohibit_topology_inspection: true
+      prohibit_transition_contract_inspection: true
+      prohibit_telemetry_inspection: true
+      prohibit_timestamp_inspection: true
+      prohibit_system_clock_inspection: true
+      prohibit_execution_environment_inspection: true
+
+      prohibit_lineage_repair: true
+      prohibit_missing_artifact_reconstruction: true
+      prohibit_nested_artifact_identity_generation: true
+      prohibit_domain_state_inference: true
+
     require_complete_recognition_artifact_set: true
     require_shared_recognition_unit_identity: true
     require_complete_artifact_digest_set: true
@@ -210,6 +238,15 @@ constraints:
   canonical_recognition_artifact_sequence_required: true
   canonical_recognition_artifact_sequence_identity_bearing: true
   binder_failure_reason_vocabulary_declaration_controlled: true
+  recognition_checkpoint_binding_stateless_required: true
+  recognition_checkpoint_binder_mutable_state_prohibited: true
+  recognition_checkpoint_payload_semantic_opacity_required: true
+  complete_artifact_state_digest_serialization_permitted: true
+  candidate_score_interpretation_by_binder_prohibited: true
+  topology_inspection_by_recognition_checkpoint_binder_prohibited: true
+  transition_contract_inspection_by_recognition_checkpoint_binder_prohibited: true
+  telemetry_inspection_by_recognition_checkpoint_binder_prohibited: true
+  environment_dependent_binding_prohibited: true
   single_verified_topology_input_required: true
   unverified_topology_reentry_prohibited: true
   recognition_reinterpretation_below_freeze_prohibited: true
@@ -371,6 +408,9 @@ constitutional_actors:
       - artifact_id_uniqueness_verification
       - canonical_artifact_sequence_construction
       - canonical_artifact_sequence_verification
+      - stateless_checkpoint_binding
+      - complete_artifact_state_serialization_for_digest
+      - semantically_opaque_digest_binding
       - direct_recognition_unit_identity_verification
       - candidate_evaluation_to_selection_lineage_verification
       - candidate_evaluation_to_seam_lineage_verification
@@ -397,6 +437,18 @@ constitutional_actors:
       - duplicate_artifact_id_acceptance
       - noncanonical_artifact_sequence_emission
       - downstream_artifact_binding_reordering
+      - mutable_actor_state
+      - candidate_score_interpretation
+      - candidate_score_thresholding
+      - candidate_ranking
+      - evidence_quality_judgment
+      - topology_inspection
+      - transition_contract_inspection
+      - telemetry_inspection
+      - timestamp_inspection
+      - system_clock_inspection
+      - execution_environment_inspection
+      - domain_state_inference
       - downstream_authority_assignment_to_nested_artifacts
       - runtime_failure_reason_invention
       - boolean_failure_signaling
@@ -594,6 +646,16 @@ prohibited_operations:
   - claim_exact_base_result_selection_identity_without_source_link
   - invent_recognition_checkpoint_failure_reason
   - silently_repair_recognition_checkpoint_failure
+  - maintain_mutable_recognition_checkpoint_binder_state
+  - interpret_candidate_score_during_checkpoint_binding
+  - threshold_candidate_score_during_checkpoint_binding
+  - rank_candidates_during_checkpoint_binding
+  - inspect_topology_during_recognition_checkpoint_binding
+  - inspect_transition_contract_during_recognition_checkpoint_binding
+  - inspect_telemetry_during_recognition_checkpoint_binding
+  - inspect_system_clock_during_recognition_checkpoint_binding
+  - inspect_execution_environment_during_recognition_checkpoint_binding
+  - infer_domain_state_during_recognition_checkpoint_binding
   - reenter_unverified_topology
   - bypass_verified_topology_bundle
   - reinterpret_frozen_recognition
@@ -659,6 +721,16 @@ definition_of_done:
   - binder_failures_use_declaration_controlled_reason_codes
   - binder_failure_never_returns_boolean_or_null
   - binder_never_silently_repairs_invalid_checkpoint_input
+  - recognition_checkpoint_binding_is_stateless
+  - recognition_checkpoint_binder_has_no_mutable_actor_state
+  - binder_can_hash_complete_artifact_state_without_interpreting_domain_meaning
+  - candidate_scores_are_digest_content_only_for_checkpoint_binding
+  - score_changes_do_not_change_lineage_decision_when_lineage_is_unchanged
+  - score_changes_do_change_checkpoint_digest_when_artifact_content_changes
+  - binder_does_not_inspect_topology
+  - binder_does_not_inspect_transition_contract
+  - binder_does_not_inspect_telemetry
+  - binder_does_not_depend_on_clock_or_execution_environment
   - basin_selection_is_bound_into_recognition_checkpoint
   - basin_selection_links_to_candidate_evaluation
   - orientation_links_to_exact_basin_selection_reference
@@ -688,6 +760,16 @@ constitutional_leakage_audit:
     canonical_binding_sequence: required
     canonical_binding_sequence_identity_bearing: required
     binder_failure_reason_vocabulary: declaration_controlled
+    binder_state_model: stateless
+    mutable_binder_state: forbidden
+    domain_payload_semantic_interpretation: forbidden
+    complete_payload_digest_serialization: permitted
+    candidate_score_interpretation: forbidden
+    topology_observation: forbidden
+    transition_contract_observation: forbidden
+    telemetry_observation: forbidden
+    clock_dependency: forbidden
+    execution_environment_dependency: forbidden
     basin_selection_binding: required
     independent_recognition_inputs_below_freeze_line: 0
     exact_selection_identity_claim_without_source_link: forbidden
