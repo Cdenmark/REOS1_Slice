@@ -159,6 +159,30 @@ operation_parameters:
       structural_lookalike_substitution_prohibited: true
       slot_label_alone_is_not_sufficient_authenticity: true
 
+      ingress_authenticity_rules:
+        model: CONSTITUTIONAL_NOUN_ADMISSIBILITY
+
+        constitutional_principles:
+          python_class_identity_is_not_constitutional_identity: true
+          structural_similarity_is_not_constitutional_authority: true
+          canonical_serializability_is_not_constitutional_authority: true
+          slot_position_is_not_constitutional_authority: true
+
+        requires:
+          - ratified_artifact_kind_to_governed_noun_binding
+          - authorized_governed_noun_identity
+          - complete_canonical_state_representation
+          - unbroken_required_lineage
+
+        prohibits:
+          - structural_duck_typing_as_authentication
+          - unauthorized_structural_lookalike_admission
+          - serializability_as_sole_authentication
+          - matching_fields_as_sole_authentication
+          - slot_label_as_sole_authentication
+
+        governed_noun_identity_proof_mechanism: NOT_YET_REIFIED
+
       required_kind_to_noun:
         CANDIDATE_BASIN_EVALUATION:
           governed_noun: CandidateBasinEvaluation
@@ -503,6 +527,10 @@ constraints:
   telemetry_inspection_by_recognition_checkpoint_binder_prohibited: true
   environment_dependent_binding_prohibited: true
   recognition_artifact_authenticity_required: true
+  constitutional_noun_admissibility_required: true
+  python_class_identity_not_required_by_constitution: true
+  structural_similarity_insufficient_for_admission: true
+  serializability_insufficient_for_admission: true
   structural_lookalike_substitution_prohibited: true
   canonical_artifact_content_projection_required: true
   canonical_artifact_digest_material_required: true
@@ -710,6 +738,9 @@ constitutional_actors:
       - duplicate_artifact_id_acceptance
       - structural_lookalike_artifact_substitution
       - slot_label_as_sole_artifact_authentication
+      - structural_similarity_as_authentication
+      - serializability_as_authentication
+      - unratified_noun_admission
       - artifact_kind_relabeling
       - alternate_checkpoint_material_schema
       - alternate_artifact_digest_material_schema
@@ -1056,6 +1087,11 @@ constitutional_leakage_audit:
     binder_state_model: stateless
     mutable_binder_state: forbidden
     artifact_authenticity: required
+    artifact_authenticity_model: CONSTITUTIONAL_NOUN_ADMISSIBILITY
+    python_class_identity_as_constitutional_proof: forbidden
+    structural_shape_as_constitutional_proof: forbidden
+    serializability_as_constitutional_proof: forbidden
+    governed_noun_authorization: required
     structural_lookalike_substitution: forbidden
     canonical_artifact_material_schema: explicit
     canonical_checkpoint_material_schema: explicit
