@@ -154,6 +154,261 @@ operation_parameters:
       prohibit_nested_artifact_identity_generation: true
       prohibit_domain_state_inference: true
 
+    artifact_authenticity:
+      nominal_noun_identity_required: true
+      structural_lookalike_substitution_prohibited: true
+      slot_label_alone_is_not_sufficient_authenticity: true
+
+      required_kind_to_noun:
+        CANDIDATE_BASIN_EVALUATION:
+          governed_noun: CandidateBasinEvaluation
+
+        BASIN_SELECTION:
+          governed_noun: BasinSelection
+
+        SEAM_ACTIVATION_CONDITION:
+          governed_noun: SeamActivationCondition
+
+        ORIENTATION_RESOLUTION:
+          governed_noun: OrientationResolution
+
+        SEAM_AWARE_RECOGNITION_RESULT:
+          governed_noun: SeamAwareRecognitionResult
+
+      requirements:
+        - each_required_slot_contains_its_ratified_governed_noun
+        - artifact_kind_must_correspond_to_actual_governed_noun
+        - structurally_similar_foreign_noun_must_fail_closed
+        - binder_may_not_relabel_foreign_noun_as_required_kind
+
+    canonical_artifact_content_projection:
+      projection_scope: COMPLETE_DECLARED_NOUN_STATE
+
+      recursive_rules:
+        declared_fields:
+          include_all: true
+          preserve_declared_field_names: true
+
+        nested_declared_nouns:
+          recursively_project_complete_declared_state: true
+
+        ordered_sequences:
+          preserve_element_order: true
+
+        optional_values:
+          preserve_null_explicitly: true
+
+        strings:
+          preserve_exact_value: true
+          whitespace_normalization_prohibited: true
+          case_normalization_prohibited: true
+
+        numeric_values:
+          preserve_exact_canonical_numeric_value: true
+          semantic_interpretation_prohibited: true
+
+        mappings:
+          canonical_key_ordering_required: true
+
+      prohibited:
+        - field_omission
+        - semantic_normalization
+        - whitespace_cleanup
+        - case_conversion
+        - inferred_default_insertion
+        - domain_value_reinterpretation
+        - omission_of_null_declared_fields
+
+    canonical_artifact_digest_material:
+      exact_fields:
+        - artifact_kind
+        - artifact_id
+        - artifact_content
+
+      artifact_content:
+        source: canonical_artifact_content_projection
+
+      additional_fields_prohibited: true
+      omitted_fields_prohibited: true
+      field_names_identity_bearing: true
+
+      digest_function:
+        service: canonical_hash
+
+    canonical_recognition_checkpoint_material:
+      material_type:
+        value: RECOGNITION_CHECKPOINT
+        identity_bearing: true
+
+      exact_fields:
+        - material_type
+        - recognition_unit_id
+        - candidate_evaluation_ref
+        - basin_selection_ref
+        - seam_activation_condition_ref
+        - orientation_resolution_ref
+        - seam_aware_result_ref
+        - artifact_bindings
+
+      artifact_bindings:
+        sequence: CANONICAL_ARTIFACT_BINDING_SEQUENCE
+        entry_exact_fields:
+          - artifact_kind
+          - artifact_id
+          - artifact_digest
+
+      additional_fields_prohibited: true
+      omitted_fields_prohibited: true
+
+      excluded_from_checkpoint_material:
+        - bundle_id
+        - recognition_checkpoint_digest
+
+      digest_function:
+        service: canonical_hash
+
+    recognition_checkpoint_digest_derivation:
+      input:
+        canonical_recognition_checkpoint_material
+
+      operation:
+        canonical_hash
+
+      deterministic: true
+
+      runtime_salt_prohibited: true
+      timestamp_prohibited: true
+      random_value_prohibited: true
+      environment_value_prohibited: true
+
+    frozen_recognition_bundle_id_derivation:
+      prefix: "FRB-"
+
+      material:
+        exact_fields:
+          - material_type
+          - recognition_checkpoint_digest
+
+        material_type:
+          value: FROZEN_RECOGNITION_BUNDLE_ID
+          identity_bearing: true
+
+      operation:
+        canonical_hash
+
+      digest_slice:
+        start: 0
+        length: 16
+
+      output_transform:
+        uppercase: true
+
+      final_form:
+        prefix_then_digest_slice: true
+
+      deterministic: true
+
+      runtime_assigned_identity_prohibited: true
+      random_identity_prohibited: true
+      timestamp_identity_prohibited: true
+
+    recognition_checkpoint_failure_mapping:
+      missing_required_artifact:
+        reason_code: MISSING_REQUIRED_ARTIFACT
+
+      artifact_authenticity_failure:
+        reason_code: ARTIFACT_TYPE_MISMATCH
+
+      candidate_evaluation_vs_seam_recognition_unit_mismatch:
+        reason_code: RECOGNITION_UNIT_MISMATCH
+
+      basin_selection_evaluation_link_mismatch:
+        reason_code: EVALUATION_LINEAGE_MISMATCH
+
+      seam_condition_evaluation_link_mismatch:
+        reason_code: EVALUATION_LINEAGE_MISMATCH
+
+      orientation_selection_link_mismatch:
+        reason_code: SELECTION_LINEAGE_MISMATCH
+
+      orientation_seam_condition_link_mismatch:
+        reason_code: SEAM_LINEAGE_MISMATCH
+
+      seam_aware_result_orientation_link_mismatch:
+        reason_code: ORIENTATION_LINEAGE_MISMATCH
+
+      base_result_recognition_unit_mismatch:
+        reason_code: BASE_RESULT_RECOGNITION_UNIT_MISMATCH
+
+      base_result_selection_outcome_mismatch:
+        reason_code: BASE_RESULT_SELECTION_OUTCOME_MISMATCH
+
+      artifact_set_mismatch:
+        reason_code: ARTIFACT_SET_MISMATCH
+
+      duplicate_artifact_kind:
+        reason_code: DUPLICATE_ARTIFACT_KIND
+
+      duplicate_artifact_id:
+        reason_code: DUPLICATE_ARTIFACT_ID
+
+      canonical_sequence_violation:
+        reason_code: CANONICAL_SEQUENCE_VIOLATION
+
+      digest_construction_failure:
+        reason_code: DIGEST_CONSTRUCTION_FAILURE
+
+    exact_failure_mapping_required: true
+    runtime_failure_mapping_discretion_prohibited: true
+
+    recognition_checkpoint_validation_precedence:
+      deterministic_precedence_required: true
+      first_failing_stage_terminates_binding: true
+      multiple_failure_aggregation_prohibited: true
+
+      ordered_stages:
+        - stage: 1
+          name: REQUIRED_ARTIFACT_COMPLETENESS
+
+        - stage: 2
+          name: ARTIFACT_AUTHENTICITY
+
+        - stage: 3
+          name: DIRECT_RECOGNITION_UNIT_PARITY
+
+        - stage: 4
+          name: EVALUATION_LINEAGE
+
+        - stage: 5
+          name: SELECTION_LINEAGE
+
+        - stage: 6
+          name: SEAM_LINEAGE
+
+        - stage: 7
+          name: ORIENTATION_LINEAGE
+
+        - stage: 8
+          name: BASE_RESULT_RECOGNITION_UNIT_PARITY
+
+        - stage: 9
+          name: BASE_RESULT_SELECTION_OUTCOME_PARITY
+
+        - stage: 10
+          name: ARTIFACT_SET_AND_UNIQUENESS
+
+        - stage: 11
+          name: CANONICAL_SEQUENCE
+
+        - stage: 12
+          name: ARTIFACT_DIGEST_CONSTRUCTION
+
+        - stage: 13
+          name: CHECKPOINT_DIGEST_CONSTRUCTION
+
+        - stage: 14
+          name: BUNDLE_ID_DERIVATION
+
     require_complete_recognition_artifact_set: true
     require_shared_recognition_unit_identity: true
     require_complete_artifact_digest_set: true
@@ -247,6 +502,15 @@ constraints:
   transition_contract_inspection_by_recognition_checkpoint_binder_prohibited: true
   telemetry_inspection_by_recognition_checkpoint_binder_prohibited: true
   environment_dependent_binding_prohibited: true
+  recognition_artifact_authenticity_required: true
+  structural_lookalike_substitution_prohibited: true
+  canonical_artifact_content_projection_required: true
+  canonical_artifact_digest_material_required: true
+  canonical_checkpoint_material_schema_required: true
+  deterministic_checkpoint_digest_derivation_required: true
+  deterministic_bundle_id_derivation_required: true
+  exact_failure_reason_mapping_required: true
+  deterministic_failure_precedence_required: true
   single_verified_topology_input_required: true
   unverified_topology_reentry_prohibited: true
   recognition_reinterpretation_below_freeze_prohibited: true
@@ -285,6 +549,7 @@ unresolved_requirement_codes:
 
 recognition_checkpoint_failure_reason_codes:
   - MISSING_REQUIRED_ARTIFACT
+  - ARTIFACT_TYPE_MISMATCH
   - RECOGNITION_UNIT_MISMATCH
   - EVALUATION_LINEAGE_MISMATCH
   - SELECTION_LINEAGE_MISMATCH
@@ -406,9 +671,17 @@ constitutional_actors:
       - exact_artifact_set_verification
       - artifact_kind_uniqueness_verification
       - artifact_id_uniqueness_verification
+      - artifact_authenticity_verification
       - canonical_artifact_sequence_construction
       - canonical_artifact_sequence_verification
       - stateless_checkpoint_binding
+      - canonical_artifact_content_projection
+      - canonical_artifact_digest_material_construction
+      - canonical_checkpoint_material_construction
+      - deterministic_checkpoint_digest_derivation
+      - deterministic_bundle_identity_derivation
+      - deterministic_failure_precedence
+      - exact_failure_reason_mapping
       - complete_artifact_state_serialization_for_digest
       - semantically_opaque_digest_binding
       - direct_recognition_unit_identity_verification
@@ -435,8 +708,18 @@ constitutional_actors:
       - additional_artifact_acceptance
       - duplicate_artifact_kind_acceptance
       - duplicate_artifact_id_acceptance
+      - structural_lookalike_artifact_substitution
+      - slot_label_as_sole_artifact_authentication
+      - artifact_kind_relabeling
+      - alternate_checkpoint_material_schema
+      - alternate_artifact_digest_material_schema
       - noncanonical_artifact_sequence_emission
       - downstream_artifact_binding_reordering
+      - runtime_selected_failure_precedence
+      - runtime_selected_failure_reason_mapping
+      - failure_aggregation
+      - circular_checkpoint_digest_material
+      - runtime_assigned_bundle_identity
       - mutable_actor_state
       - candidate_score_interpretation
       - candidate_score_thresholding
@@ -727,6 +1010,16 @@ definition_of_done:
   - candidate_scores_are_digest_content_only_for_checkpoint_binding
   - score_changes_do_not_change_lineage_decision_when_lineage_is_unchanged
   - score_changes_do_change_checkpoint_digest_when_artifact_content_changes
+  - each_checkpoint_input_is_authenticated_as_its_ratified_governed_noun
+  - structural_lookalike_artifacts_fail_closed
+  - identical_artifact_state_produces_identical_artifact_digest_across_conforming_implementations
+  - identical_five_artifact_chain_produces_identical_checkpoint_material
+  - identical_checkpoint_material_produces_identical_recognition_checkpoint_digest
+  - identical_recognition_checkpoint_digest_produces_identical_bundle_id
+  - bundle_id_and_checkpoint_digest_do_not_participate_in_checkpoint_digest_material
+  - every_failure_condition_maps_to_exactly_one_declaration_controlled_reason_code
+  - simultaneous_failures_resolve_by_declared_precedence
+  - runtime_cannot_choose_failure_precedence
   - binder_does_not_inspect_topology
   - binder_does_not_inspect_transition_contract
   - binder_does_not_inspect_telemetry
@@ -762,6 +1055,15 @@ constitutional_leakage_audit:
     binder_failure_reason_vocabulary: declaration_controlled
     binder_state_model: stateless
     mutable_binder_state: forbidden
+    artifact_authenticity: required
+    structural_lookalike_substitution: forbidden
+    canonical_artifact_material_schema: explicit
+    canonical_checkpoint_material_schema: explicit
+    checkpoint_digest_identity_derivation: explicit
+    bundle_identity_derivation: explicit
+    failure_reason_mapping: explicit
+    multi_failure_precedence: deterministic
+    runtime_failure_discretion: forbidden
     domain_payload_semantic_interpretation: forbidden
     complete_payload_digest_serialization: permitted
     candidate_score_interpretation: forbidden
