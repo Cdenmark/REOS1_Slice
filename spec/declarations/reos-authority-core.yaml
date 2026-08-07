@@ -1,0 +1,344 @@
+declaration_id: REOS-AUTHORITY-CORE
+declaration_type: GLOBAL_CONSTITUTIONAL_AUTHORITY_CORE
+status: PROVISIONAL
+scope: COMPILER_TO_RUNTIME_GLOBAL
+
+purpose:
+  Define language-neutral constitutional identity and representation authorization doctrine reusable across all REOS horizons without absorbing boundary-local admission jurisdiction.
+
+constitutional_principles:
+  authorization_is_global: true
+  admission_is_boundary_local: true
+  identity_is_not_authorization: true
+  authorization_is_not_admission: true
+  runtime_representation_does_not_define_constitutional_identity: true
+  structural_similarity_does_not_confer_authority: true
+  serializability_does_not_confer_authority: true
+
+governed_noun_identity:
+
+  constitutional_question:
+    "What constitutional noun is this?"
+
+  scope:
+    GLOBAL
+
+  fundamental_principle:
+    Constitutional Noun Identity is a canonical declaration-scoped property of the governing declaration, not of a runtime class, implementation language, memory representation, schema object, or execution engine.
+
+  identity_basis:
+    declaration_identity_required: true
+    declaration_scoped_symbolic_noun_name_required: true
+
+  canonical_derivation:
+
+    required_material:
+      - declaration_identity
+      - declaration_scoped_symbolic_noun_name
+
+    canonical_representation_required: true
+    canonical_identity_derivation_required: true
+    deterministic: true
+    language_neutral: true
+
+    identical_material_produces_identical_identity: true
+
+    runtime_randomness_prohibited: true
+    timestamp_dependency_prohibited: true
+    runtime_environment_dependency_prohibited: true
+    implementation_class_dependency_prohibited: true
+
+  uniqueness_and_invariance:
+
+    declaration_scoped_uniqueness_required: true
+
+    invariant_for_lifetime_of_governing_declaration: true
+
+    runtime_implementation_change_does_not_change_identity: true
+    language_binding_change_does_not_change_identity: true
+    memory_layout_change_does_not_change_identity: true
+
+  identity_vs_representation_version:
+
+    abstract_governed_noun_identity_stable: true
+    schema_or_representation_version_is_separate: true
+    implementation_representation_is_separate: true
+
+  identity_vs_artifact_kind:
+
+    artifact_kind_is_boundary_role: true
+    governed_noun_identity_is_constitutional_identity: true
+    artifact_kind_equals_governed_noun_identity: false
+
+  strict_non_identity_laws:
+
+    python_class_identity_is_not_constitutional_identity: true
+    module_path_is_not_constitutional_identity: true
+    reflection_identity_is_not_constitutional_identity: true
+
+    structural_similarity_is_not_constitutional_identity: true
+    matching_fields_are_not_constitutional_identity: true
+    duck_typing_is_not_constitutional_identity: true
+
+    canonical_serializability_is_not_constitutional_identity: true
+    json_projection_is_not_constitutional_identity: true
+    dictionary_projection_is_not_constitutional_identity: true
+
+  jurisdiction_boundary:
+
+    identity_defines:
+      - constitutional_noun_definition
+
+    identity_does_not_assert:
+      - instance_authorization
+      - verification_success
+      - lineage_validity
+      - admission
+      - registration
+      - provenance_closure
+      - boundary_binding
+      - freeze_line_validity
+      - execution_authority
+
+governed_noun_representation_authorization:
+
+  constitutional_question:
+    "Is this exact independently verified representation constitutionally authorized to stand for this governed noun under this authority context?"
+
+  scope:
+    HYBRID
+
+  global_doctrine_local_policy_split:
+
+    global_authority_core_owns:
+      - authorization_transition_semantics
+      - required_evidence_classes
+      - determinism
+      - recomputability
+      - authorization_stability
+      - jurisdiction_firewalls
+      - fail_closed_requirement
+
+    horizon_declaration_owns:
+      - eligible_governed_nouns
+      - concrete_authorization_sufficiency_policy
+      - required_canonical_authority_context
+      - stage_ordering
+      - authorization_failure_vocabulary
+      - boundary_consumption_rules
+
+  transition:
+
+    pre_state:
+      VERIFIED_BUT_UNAUTHORIZED_NOUN_REPRESENTATION
+
+    post_state:
+      AUTHORIZED_GOVERNED_NOUN_REPRESENTATION
+
+    artifact_mutation_prohibited: true
+    runtime_domain_state_creation_prohibited: true
+    runtime_content_fact_creation_prohibited: true
+
+  new_constitutional_fact:
+
+    exactly_one_new_normative_fact: true
+
+    claim:
+      A specific independently verified artifact representation, identified by its canonical content commitment, is constitutionally authorized to stand for one declaration-scoped Governed Noun Identity under one canonical authority context.
+
+  required_evidence_classes:
+
+    constitutional_noun_identity_basis:
+      required: true
+      source:
+        governed_noun_identity
+
+    independent_verification_facts:
+      required: true
+      producer_must_be_independent_of_authorization_adjudication: true
+
+    artifact_identity_and_content_commitment:
+      required: true
+      deterministic_content_commitment_required: true
+
+    canonical_authority_context:
+      required: true
+      complete_context_required: true
+      partial_context_comparison_insufficient: true
+      concrete_context_fields_owned_by_horizon_declaration: true
+
+  adjudication_law:
+
+    governed_constitutional_transition: true
+    platform_utility: false
+    convenience_service: false
+
+    derivative_from_declared_law_and_verified_evidence: true
+    recomputable: true
+    sovereign_authorizer_required: false
+
+    adjudication_statement:
+      Authorization adjudicates whether independently established evidence is constitutionally sufficient under declared authorization law for a specific representation to stand for a governed noun within the active authority context.
+
+  determinism:
+
+    identical_governing_law_required_for_equivalence: true
+    identical_constitutional_noun_identity_required_for_equivalence: true
+    identical_verified_evidence_required_for_equivalence: true
+    identical_canonical_authority_context_required_for_equivalence: true
+
+    identical_inputs_produce_identical_canonical_authorization_outcome: true
+
+    byte_identity_of_runtime_wrapper_not_required: true
+
+    timestamp_dependency_prohibited: true
+    mutable_state_dependency_prohibited: true
+    execution_history_dependency_prohibited: true
+    runtime_environment_dependency_prohibited: true
+    hardware_dependency_prohibited: true
+    randomness_prohibited: true
+    privileged_single_authorizer_identity_prohibited: true
+
+  authorization_stability:
+
+    evidence_scoped: true
+    context_scoped: true
+
+    previous_authorization_does_not_survive_identity_bearing_evidence_change: true
+
+    fresh_authorization_required_if_changed:
+      - constitutional_noun_identity
+      - artifact_content_commitment
+      - independent_verification_evidence
+      - canonical_authority_context
+
+    universal_cross_context_authorization_prohibited: true
+
+  granularity:
+
+    primary_unit:
+      PER_ARTIFACT_REPRESENTATION
+
+    each_representation_independently_adjudicated: true
+
+    schema_compatibility_alone_insufficient: true
+    structural_similarity_alone_insufficient: true
+    serializability_alone_insufficient: true
+
+    optional_multi_artifact_authority_context_coherence:
+
+      permitted: true
+
+      claim_scope:
+        All individually authorized representations participating in the coherence evaluation share one complete canonical authority context.
+
+      complete_authority_context_equality_required: true
+
+      must_not_assert:
+        - checkpoint_membership
+        - checkpoint_completeness
+        - checkpoint_exact_set
+        - checkpoint_uniqueness
+        - checkpoint_canonical_sequence
+        - checkpoint_lineage_closure
+        - checkpoint_digest
+        - bundle_identity
+        - freeze_line_validity
+
+  success_claim_boundaries:
+
+    authorization_may_assert:
+      - representation_authorization
+      - governed_noun_identity_correspondence
+      - canonical_authority_context_correspondence
+      - constitutional_evidence_sufficiency
+
+    authorization_may_not_assert:
+      - runtime_domain_correctness_beyond_verified_facts
+      - checkpoint_construction
+      - checkpoint_set_closure
+      - checkpoint_uniqueness
+      - checkpoint_sequence
+      - checkpoint_cross_artifact_lineage_closure
+      - checkpoint_digest
+      - bundle_identity
+      - freeze_line_validity
+      - system_admission
+      - registration
+      - provenance_certification
+      - downstream_execution_authority
+
+  failure_semantics:
+
+    fail_closed_required: true
+    typed_failure_outcome_required: true
+
+    global_core_does_not_define_horizon_specific_reason_codes: true
+    horizon_declaration_controls_failure_vocabulary: true
+
+    authorization_must_fail_if_required_evidence_is:
+      - missing
+      - malformed
+      - independently_unverified
+      - constitutionally_insufficient
+      - authority_context_inconsistent
+
+  non_authority_prohibitions:
+
+    authorization_must_not:
+      - mutate_target_artifact
+      - repair_target_artifact
+      - normalize_target_artifact
+      - infer_missing_identity
+      - invent_governed_noun_identity
+      - manufacture_verification_facts
+      - create_runtime_domain_facts
+      - assign_boundary_admission
+      - create_registration
+      - certify_provenance
+      - construct_checkpoint
+      - assign_freeze_line_identity
+
+authority_relationships:
+
+  governed_noun_identity:
+    answers:
+      "What constitutional noun is this?"
+
+  governed_noun_representation_authorization:
+    answers:
+      "May this independently verified representation constitutionally stand for that governed noun under this authority context?"
+
+  admission:
+    global_authority_core_operation: false
+    boundary_local: true
+    principle:
+      Admission determines whether an authorized representation may enter a specific governed boundary or record.
+
+  separation_laws:
+
+    identity_does_not_imply_authorization: true
+    authorization_does_not_imply_admission: true
+    admission_does_not_redefine_identity: true
+
+    authorization_is_global_doctrine: true
+    admission_is_boundary_local_decision: true
+
+scope_limits:
+
+  authority_core_must_not_absorb:
+    - horizon_specific_admission
+    - checkpoint_binding
+    - artifact_registration
+    - provenance_certification
+    - movement_freeze_logic
+    - topology_edge_authorization_logic
+    - domain_scoring
+    - domain_selection
+    - runtime_execution_logic
+
+  frozen_runtime_noun_changes_required: false
+
+  external_authority_evidence_permitted: true
+
+  frozen_vs001_vs002_vs003_nouns_must_remain_unchanged: true
