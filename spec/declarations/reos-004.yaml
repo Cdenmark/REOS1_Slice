@@ -299,6 +299,168 @@ operation_parameters:
             - must_not_redefine_declared_failure_category
           classification: IMPLEMENTATION_OR_TELEMETRY_ONLY
 
+        coverage_projection:
+          protected_stable_truth: >
+            Independent verification evidence is sufficient for authorization only when
+            the declared evidence surface identifies and commits to the same exact
+            immutable artifact representation whose canonical content digest is being
+            authorized.
+
+          identity_content_coverage_separation_clause: >
+            artifact identity != artifact content commitment != exact representation
+            coverage. Identity reference alone is insufficient. Exact representation
+            coverage requires declaration-controlled composition of independent
+            verification legitimacy, exact artifact identity binding, declared
+            companion evidence, canonical content commitment, authorization-side
+            canonical digest recomputation, and required identity/lineage/context
+            equalities.
+
+          composite_coverage_law: >
+            Exact representation coverage exists only when all required conditions hold:
+            1. the primary verification report is independently valid/successful;
+            2. the report identifies the target artifact instance where that report
+               family exposes a direct artifact identity reference;
+            3. the declared companion evidence identifies the same target artifact
+               instance;
+            4. the companion evidence carries the required canonical content
+               commitment;
+            5. authorization adjudication independently recomputes the target artifact
+               canonical digest;
+            6. the recomputed digest equals the declared companion content
+               commitment;
+            7. all declaration-required lineage/context equalities hold.
+            Failure of any required relationship resolves as AUTH_VERIFICATION_COVERAGE_INVALID.
+            Coverage may not be inferred from common transition, common contract,
+            runtime class, structural similarity, artifact role, temporal proximity,
+            or identity reference alone.
+
+          coverage_projection_table:
+            candidate_basin_evaluation:
+              artifact_noun: CandidateBasinEvaluation
+              artifact_identity_field: evaluation_id
+              primary_verification_family: VS003VerificationReport
+              report_artifact_reference_field: evaluation_id
+              report_success_condition: verified == true and selection_evaluation_lineage, seam_evaluation_lineage, seam_recognition_unit_lineage, orientation_selection_lineage, orientation_seam_lineage checks all pass
+              companion_evidence_family: VS003TransitionTelemetry
+              companion_artifact_reference_field: evaluation_id
+              companion_content_commitment_field: candidate_evaluation_digest
+              required_lineage_equalities:
+                - VS003VerificationReport.evaluation_id == CandidateBasinEvaluation.evaluation_id
+                - VS003TransitionTelemetry.evaluation_id == CandidateBasinEvaluation.evaluation_id
+              canonical_artifact_projection: canonical content projection of complete declared CandidateBasinEvaluation state
+              required_digest_equality: VS003TransitionTelemetry.candidate_evaluation_digest == canonical digest of the complete declared CandidateBasinEvaluation state
+
+            basin_selection:
+              artifact_noun: BasinSelection
+              artifact_identity_field: selection_id
+              primary_verification_family: VS003VerificationReport
+              report_artifact_reference_field: selection_id
+              report_success_condition: verified == true and selection_evaluation_lineage, orientation_selection_lineage, orientation_seam_lineage, primary_basin_preserved, compiler_parameters_applied, seam_state_verified, orientation_state_verified checks all pass
+              companion_evidence_family: VS003TransitionTelemetry
+              companion_artifact_reference_field: selection_id
+              companion_content_commitment_field: selection_digest
+              required_lineage_equalities:
+                - VS003VerificationReport.selection_id == BasinSelection.selection_id
+                - VS003TransitionTelemetry.selection_id == BasinSelection.selection_id
+                - VS003TransitionTelemetry.evaluation_id == BasinSelection.evaluation_id
+              canonical_artifact_projection: canonical content projection of complete declared BasinSelection state
+              required_digest_equality: VS003TransitionTelemetry.selection_digest == canonical digest of the complete declared BasinSelection state
+
+            seam_condition:
+              artifact_noun: SeamActivationCondition
+              artifact_identity_field: condition_id
+              primary_verification_family: VS003VerificationReport
+              report_artifact_reference_field: seam_condition_id
+              report_success_condition: verified == true and seam_evaluation_lineage, seam_recognition_unit_lineage, orientation_selection_lineage, orientation_seam_lineage, primary_basin_preserved, compiler_parameters_applied, seam_state_verified, orientation_state_verified checks all pass
+              companion_evidence_family: VS003TransitionTelemetry
+              companion_artifact_reference_field: seam_condition_id
+              companion_content_commitment_field: seam_condition_digest
+              required_lineage_equalities:
+                - VS003VerificationReport.seam_condition_id == SeamActivationCondition.condition_id
+                - VS003TransitionTelemetry.seam_condition_id == SeamActivationCondition.condition_id
+                - VS003TransitionTelemetry.evaluation_id == SeamActivationCondition.evaluation_id
+                - VS003TransitionTelemetry.recognition_unit_id == SeamActivationCondition.recognition_unit_id
+              canonical_artifact_projection: canonical content projection of complete declared SeamActivationCondition state
+              required_digest_equality: VS003TransitionTelemetry.seam_condition_digest == canonical digest of the complete declared SeamActivationCondition state
+
+            orientation_resolution:
+              artifact_noun: OrientationResolution
+              artifact_identity_field: resolution_id
+              primary_verification_family: VS003VerificationReport
+              report_artifact_reference_field: orientation_resolution_id
+              report_success_condition: verified == true and orientation_selection_lineage, orientation_seam_lineage, primary_basin_preserved, compiler_parameters_applied, seam_state_verified, orientation_state_verified checks all pass
+              companion_evidence_family: VS003TransitionTelemetry
+              companion_artifact_reference_field: orientation_resolution_id
+              companion_content_commitment_field: orientation_resolution_digest
+              required_lineage_equalities:
+                - VS003VerificationReport.orientation_resolution_id == OrientationResolution.resolution_id
+                - VS003TransitionTelemetry.orientation_resolution_id == OrientationResolution.resolution_id
+                - VS003TransitionTelemetry.selection_id == OrientationResolution.selection_id
+                - VS003TransitionTelemetry.seam_condition_id == OrientationResolution.seam_condition_id
+              canonical_artifact_projection: canonical content projection of complete declared OrientationResolution state
+              required_digest_equality: VS003TransitionTelemetry.orientation_resolution_digest == canonical digest of the complete declared OrientationResolution state
+
+            seam_aware_recognition_result:
+              artifact_noun: SeamAwareRecognitionResult
+              artifact_identity_field: result_id
+              primary_verification_family: VS003VerificationReport
+              report_artifact_reference_field: orientation_resolution_id
+              report_success_condition: verified == true and orientation_selection_lineage, orientation_seam_lineage, primary_basin_preserved, compiler_parameters_applied, seam_state_verified, orientation_state_verified checks all pass
+              companion_evidence_family: VS003TransitionTelemetry
+              companion_artifact_reference_field: result_id
+              companion_content_commitment_field: result_digest
+              required_lineage_equalities:
+                - VS003VerificationReport.orientation_resolution_id == SeamAwareRecognitionResult.orientation_resolution_id
+                - VS003TransitionTelemetry.result_id == SeamAwareRecognitionResult.result_id
+                - VS003TransitionTelemetry.orientation_resolution_id == SeamAwareRecognitionResult.orientation_resolution_id
+                - VS003TransitionTelemetry.recognition_unit_id == SeamAwareRecognitionResult.base_result.recognition_unit_id
+                - SeamAwareRecognitionResult.base_result.orientation.primary_basin == SeamAwareRecognitionResult.primary_basin
+              canonical_artifact_projection: canonical content projection of complete declared SeamAwareRecognitionResult state
+              required_digest_equality: VS003TransitionTelemetry.result_digest == canonical digest of the complete declared SeamAwareRecognitionResult state
+
+          seam_aware_projection_complete: true
+
+          self_assertion_firewall: >
+            Coverage must not be established solely by caller assertion, artifact
+            identity alone, report identity alone, Python class/runtime type,
+            structural similarity, shared transition_id, shared contract context,
+            temporal proximity, or artifact role similarity. Declaration policy may
+            define how existing evidence composes; it may not manufacture absent
+            evidence.
+
+          report_digest_rule: >
+            Use the existing canonical report digest rule. Authorization must
+            recompute and validate verification_report_digest before relying on report
+            coverage. No new global digest doctrine is created.
+
+          authorization_actor_jurisdiction:
+            owns:
+              - deterministic application of declared coverage projections
+              - canonical artifact digest recomputation
+              - required equality evaluation
+              - AUTH_VERIFICATION_COVERAGE_INVALID emission
+            does_not_own:
+              - creation of verification facts
+              - definition of verification truth
+              - invention of companion evidence
+              - repair or modification of verifier outputs
+              - Binder checkpoint membership
+              - Binder lineage closure
+              - Binder sequence
+              - Binder digest
+              - freeze-line validity
+              - Movement admission
+
+          implementation_freedom_clause: >
+            Freeze only constitutional evidence relationships and equality
+            requirements. Do not freeze helper ordering, method decomposition,
+            internal stage topology, caching, precomputation, or parallel
+            evaluation. Identical evidence must resolve to identical constitutional
+            coverage outcome.
+
+          reason_code_on_coverage_failure:
+            AUTH_VERIFICATION_COVERAGE_INVALID
+
       required_kind_to_noun:
         CANDIDATE_BASIN_EVALUATION:
           governed_noun: CandidateBasinEvaluation
