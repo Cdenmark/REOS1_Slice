@@ -183,6 +183,122 @@ operation_parameters:
 
         governed_noun_identity_proof_mechanism: NOT_YET_REIFIED
 
+      authorization_adjudication:
+        scope:
+          constitutional_question: >
+            Is this independently verified representation constitutionally authorized
+            to stand for the declared governed noun under the active authority context?
+          pre_state: VERIFIED_BUT_UNAUTHORIZED_NOUN_REPRESENTATION
+          post_state: AUTHORIZED_GOVERNED_NOUN_REPRESENTATION
+
+        failure_reason_vocabulary:
+          declaration_controlled: true
+          runtime_reason_invention_prohibited: true
+          constitutional_reason_codes:
+            - AUTH_EVIDENCE_INVALID
+            - AUTH_CONTEXT_INVALID
+            - AUTH_REPRESENTATION_INVALID
+            - AUTH_VERIFICATION_INVALID
+            - AUTH_VERIFICATION_COVERAGE_INVALID
+            - AUTH_GOVERNED_NOUN_CORRESPONDENCE_INVALID
+            - AUTH_IDENTITY_COHERENCE_INVALID
+
+        reason_code_semantics:
+          AUTH_EVIDENCE_INVALID:
+            protected_stable_truth: complete_and_well_formed_required_authorization_evidence
+            may_subsume:
+              - missing_required_evidence
+              - malformed_artifact_digest
+              - malformed_verification_report_digest
+              - missing_cni_basis_material
+
+          AUTH_CONTEXT_INVALID:
+            protected_stable_truth: legitimate_authority_context_and_operation_authority_required
+            may_subsume:
+              - contract_digest_mismatch
+              - authority_context_mismatch
+              - operation_not_authorized
+
+          AUTH_REPRESENTATION_INVALID:
+            protected_stable_truth: representation_requires_valid_canonical_content_commitment
+            may_subsume:
+              - artifact_canonical_digest_mismatch
+              - artifact_identity_content_mismatch
+
+          AUTH_VERIFICATION_INVALID:
+            protected_stable_truth: independent_verification_evidence_must_be_legitimate_and_integrity_bound
+            may_subsume:
+              - report_digest_mismatch
+              - report_unsuccessful_or_unverified
+              - invalid_independent_verification_evidence
+
+          AUTH_VERIFICATION_COVERAGE_INVALID:
+            protected_stable_truth: valid_verification_evidence_must_cover_exact_target_representation
+            constitutionally_distinct_from:
+              - AUTH_VERIFICATION_INVALID
+
+          AUTH_GOVERNED_NOUN_CORRESPONDENCE_INVALID:
+            protected_stable_truth: artifact_must_lawfully_correspond_to_declaration_scoped_governed_noun
+            may_subsume:
+              - mapping_absent
+              - mapping_mismatch
+              - structural_lookalike_substitution
+              - class_or_reflection_substitution
+
+          AUTH_IDENTITY_COHERENCE_INVALID:
+            protected_stable_truth: authorization_identity_and_envelope_coherence_must_be_deterministic_and_non_conflicting
+            may_subsume:
+              - duplicate_authorization_identity
+              - context_bound_identity_inconsistency
+              - authorization_identity_derivation_inconsistency
+
+        constitutional_failure_precedence:
+          deterministic_precedence_required: true
+          first_failing_constitutional_category_required: true
+          multiple_failure_aggregation_prohibited: true
+          ordered_categories:
+            - AUTH_EVIDENCE_INVALID
+            - AUTH_CONTEXT_INVALID
+            - AUTH_REPRESENTATION_INVALID
+            - AUTH_VERIFICATION_INVALID
+            - AUTH_VERIFICATION_COVERAGE_INVALID
+            - AUTH_GOVERNED_NOUN_CORRESPONDENCE_INVALID
+            - AUTH_IDENTITY_COHERENCE_INVALID
+          runtime_precedence_discretion_prohibited: true
+
+        implementation_freedom_below_constitutional_semantics:
+          internal_check_order_constitutionally_fixed: false
+          permitted:
+            - check_combination
+            - check_splitting
+            - internal_reordering
+            - precomputation
+            - parallelization
+          required:
+            - identical_admissible_evidence_must_emit_identical_constitutional_reason_category
+            - helper_call_order_is_not_constitutional_law
+
+        binder_jurisdiction_firewall:
+          authorization_failure_categories_must_not_assert:
+            - checkpoint_completeness
+            - checkpoint_uniqueness
+            - checkpoint_canonical_sequence
+            - checkpoint_lineage_closure
+            - checkpoint_digest
+            - bundle_identity
+            - freeze_line_validity
+            - movement_admission
+          remains_under_recognition_checkpoint_binder: true
+          authorization_failure_terminates_before_binder_checkpoint_adjudication: true
+
+        telemetry_subreason_policy:
+          non_constitutional_structured_detail_permitted: true
+          constraints:
+            - must_not_create_additional_constitutional_reason_codes
+            - must_not_change_constitutional_precedence
+            - must_not_redefine_declared_failure_category
+          classification: IMPLEMENTATION_OR_TELEMETRY_ONLY
+
       required_kind_to_noun:
         CANDIDATE_BASIN_EVALUATION:
           governed_noun: CandidateBasinEvaluation
