@@ -1106,6 +1106,18 @@ constitutional_actors:
     produces:
       - directional_candidate_set
 
+    constitutional_question: >
+      Can valid frozen recognition evidence, valid verified topology evidence,
+      and active transition authority lawfully converge to determine and emit
+      the exact deterministic set of ratified one-hop directional possibilities?
+
+    question_is_not:
+      - final_movement_qualification
+      - movement_admission
+      - movement_execution
+      - candidate_ranking
+      - candidate_preference
+
     owns:
       - frozen_source_basin_binding
       - deterministic_frozen_predicate_matching
@@ -1114,6 +1126,8 @@ constitutional_actors:
       - contract_rule_application
       - directional_candidate_identity_construction
       - candidate_generation_lineage
+      - three_evidence_convergence_adjudication
+      - directional_candidate_set_constitutional_rendering
 
     prohibited:
       - topology_construction
@@ -1137,6 +1151,31 @@ constitutional_actors:
       - topology_substitution
       - unverified_topology_consumption
       - contextual_domain_reasoning
+      - candidate_ranking
+      - candidate_preference
+      - registration_assignment
+      - provenance_certification
+
+    three_evidence_convergence:
+      required_surfaces:
+        - frozen_recognition_bundle
+        - verified_topology_bundle
+        - transition_contract
+
+      independently_sufficient: false
+
+      required_commitments:
+        - valid_recognition_ingress_from_frozen_recognition_bundle
+        - valid_topology_ingress_from_verified_topology_bundle
+        - active_transition_contract_authorizes_generate_directional_candidates
+        - verified_topology_bundle_contract_identity_matches_active_transition_contract
+        - verified_topology_bundle_contract_digest_matches_active_transition_contract_digest
+        - frozen_recognition_source_state_is_compatible_with_verified_one_hop_topology_edges
+        - one_hop_relationship_type_is_direct_movement_eligibility
+
+      prohibited_inference:
+        - causal_adjacency_as_authority
+        - inferred_cross_surface_identity_without_declared_commitment
 
     admission_rule:
       all_required:
@@ -1148,6 +1187,125 @@ constitutional_actors:
         - new_biological_inference
         - recognition_reinterpretation
         - topology_inference
+
+    directional_candidate_set_semantics:
+      constitutional_classification: CONSTITUTIONAL_RENDERING
+
+      proves:
+        - exact_lawful_membership_of_ratified_one_hop_directional_possibilities
+        - each_member_relationship_satisfies_declared_one_hop_eligibility
+        - derivation_from_lawful_three_evidence_convergence
+        - deterministic_constitutional_identity
+        - immutable_membership_relationship_and_lineage_commitments
+
+      does_not_prove:
+        - movement_qualification
+        - movement_admission
+        - movement_execution
+        - candidate_ranking
+        - candidate_preference
+        - registration
+        - provenance_certification
+
+    directional_candidate_set_identity:
+      membership_semantics: SET_LIKE
+      deterministic_required: true
+      order_insensitive_required: true
+
+      constitutional_material:
+        - candidate_membership
+        - candidate_relationship_identity
+        - frozen_source_recognition_commitment
+        - verified_topology_identity_commitment
+        - generation_lineage_context_commitment_to_active_transition_authority
+
+      excluded_material:
+        - incidental_container_order
+        - runtime_class_identity
+        - timestamps
+        - randomness
+        - helper_execution_history
+        - downstream_qualification_state
+        - downstream_admission_state
+
+      authority_context_model:
+        external_context_binding_sufficient: true
+        duplicate_contract_fields_in_output_required: false
+
+    directional_candidate_set_immutability:
+      protects:
+        - candidate_membership
+        - candidate_relationship_facts
+        - source_recognition_commitment
+        - topology_commitment
+        - generation_lineage_commitment
+
+      does_not_freeze:
+        - incidental_serialization_representation
+        - incidental_container_representation
+
+      representation_flexibility_allowed_if:
+        - constitutional_fact_is_preserved
+        - deterministic_identity_is_preserved
+
+    failure_reason_mapping:
+      evidence_surface_legitimacy_and_convergence:
+        invalid_frozen_recognition_ingress:
+          reason_code: RECOGNITION_CHECKPOINT_INVALID
+          protected_stable_truth: recognition_checkpoint_evidence_is_constitutionally_invalid
+
+        invalid_verified_topology_ingress_or_binding:
+          reason_code: TOPOLOGY_BINDING_INVALID
+          protected_stable_truth: verified_topology_binding_evidence_is_constitutionally_invalid
+
+      cross_surface_lineage_and_compatibility:
+        missing_required_cross_surface_lineage_or_compatibility:
+          reason_code: MISSING_REQUIRED_LINEAGE
+          protected_stable_truth: required_cross_surface_lineage_or_compatibility_is_missing
+
+      candidate_population_integrity:
+        candidate_population_inconsistent_with_lawful_ratified_one_hop_topology:
+          reason_code: CANDIDATE_POPULATION_MISMATCH
+          protected_stable_truth: candidate_population_integrity_is_constitutionally_invalid
+
+      evidence_sufficiency:
+        insufficient_evidence_to_establish_lawful_directional_candidates:
+          reason_code: INSUFFICIENT_EVIDENCE_ITEMS
+          protected_stable_truth: evidence_surface_is_insufficient_for_lawful_directional_generation
+
+      runtime_defined_reason_codes_prohibited: true
+      semantic_drift_in_reason_reuse_prohibited: true
+      jurisdiction_transfer_in_reason_reuse_prohibited: true
+
+    constitutional_precedence:
+      deterministic_precedence_required: true
+      first_failing_constitutional_category_required: true
+      multiple_failure_aggregation_prohibited: true
+
+      ordered_categories:
+        - EVIDENCE_SURFACE_LEGITIMACY_AND_COMMON_CONTEXT_CONVERGENCE
+        - CROSS_SURFACE_LINEAGE_AND_COMPATIBILITY_SUFFICIENCY
+        - ONE_HOP_RELATIONSHIP_LEGALITY
+        - CANDIDATE_POPULATION_INTEGRITY
+        - DETERMINISTIC_IDENTITY_COMMITMENT_AND_IMMUTABLE_RENDERING_EMISSION
+
+    implementation_freedom_clause: >
+      Freeze constitutional evidence relationships, legal one-hop edge conditions,
+      constitutional failure meaning, and directional_candidate_set constitutional
+      meaning only. Do not freeze helper decomposition, function ordering, internal
+      algorithm shape, iteration strategy, caching, precomputation, or parallel edge
+      evaluation. Identical constitutional evidence must resolve to identical
+      constitutional outcome.
+
+    ownership_firewall:
+      preserves:
+        - recognition_checkpoint_binder_owns_frozen_recognition_bundle_formation
+        - topology_binding_verifier_owns_verified_topology_bundle_legitimacy
+        - compiler_and_transition_contract_own_materialized_authority_context
+        - directional_candidate_generator_owns_lawful_directional_generation_fact_and_rendering
+        - downstream_actors_own_qualification_admission_and_execution
+
+      causal_participation_transfers_ownership: false
 
   directional_momentum_evaluator:
     consumes:
