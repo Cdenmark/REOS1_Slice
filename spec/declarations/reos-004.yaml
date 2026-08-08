@@ -615,6 +615,20 @@ operation_parameters:
       timestamp_identity_prohibited: true
 
     recognition_checkpoint_failure_mapping:
+      authorization_ingress_precedence:
+        deterministic_precedence_required: true
+        first_failing_stage_terminates_binding: true
+        multiple_failure_aggregation_prohibited: true
+
+        ordered_stages:
+          - stage: 0
+            name: AUTHORIZATION_ENVELOPE_LEGITIMACY
+            failure_reason: RECOGNITION_CHECKPOINT_AUTHORIZATION_ENVELOPE_INVALID
+
+          - stage: 0
+            name: PER_ARTIFACT_AUTHORIZATION_COVERAGE
+            failure_reason: RECOGNITION_CHECKPOINT_ARTIFACT_UNAUTHORIZED
+
       missing_required_artifact:
         reason_code: MISSING_REQUIRED_ARTIFACT
 
@@ -659,6 +673,12 @@ operation_parameters:
 
       digest_construction_failure:
         reason_code: DIGEST_CONSTRUCTION_FAILURE
+
+      recognition_checkpoint_authorization_envelope_invalid:
+        reason_code: RECOGNITION_CHECKPOINT_AUTHORIZATION_ENVELOPE_INVALID
+
+      recognition_checkpoint_artifact_unauthorized:
+        reason_code: RECOGNITION_CHECKPOINT_ARTIFACT_UNAUTHORIZED
 
     exact_failure_mapping_required: true
     runtime_failure_mapping_discretion_prohibited: true
